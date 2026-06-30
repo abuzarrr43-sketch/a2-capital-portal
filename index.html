@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Client Portal</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+  :root{
+    --bg:#0B0F14;
+    --panel:#11161D;
+    --panel-2:#161D26;
+    --border:#232C38;
+    --border-soft:#1A222C;
+    --text:#E7ECF2;
+    --text-dim:#8B97A8;
+    --text-faint:#5C6878;
+    --green:#1FD17C;
+    --green-dim:#163024;
+    --red:#FF6B6B;
+    --red-dim:#2E1818;
+    --accent:#3D8BFF;
+    --radius:10px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    line-height:1.5;
+  }
+  .mono{font-family:'JetBrains Mono',monospace;}
+  ::-webkit-scrollbar{width:8px; height:8px;}
+  ::-webkit-scrollbar-thumb{background:var(--border); border-radius:4px;}
+
+  /* ---------- shared layout ---------- */
+  .app{max-width:1100px; margin:0 auto; padding:24px 20px 80px;}
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding-bottom:20px; margin-bottom:24px; border-bottom:1px solid var(--border-soft);
+  }
+  .brand{display:flex; align-items:center; gap:10px;}
+  .brand-mark{
+    width:30px; height:30px; border-radius:7px;
+    background:linear-gradient(180deg, var(--green), #14A862);
+    display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:11px; letter-spacing:-0.3px; color:#06140D;
+  }
+  .brand-name{font-weight:600; font-size:15px; letter-spacing:0.2px;}
+  .topbar-right{display:flex; align-items:center; gap:14px; font-size:13px; color:var(--text-dim);}
+  .btn{
+    background:var(--panel-2); border:1px solid var(--border); color:var(--text);
+    padding:9px 16px; border-radius:8px; font-size:13px; font-weight:500;
+    cursor:pointer; transition:border-color .15s ease, background .15s ease;
+    font-family:'Inter',sans-serif;
+  }
+  .btn:hover{border-color:#34404F; background:#1A222C;}
+  .btn-primary{background:var(--green); color:#06140D; border:1px solid var(--green);}
+  .btn-primary:hover{background:#28DB87; border-color:#28DB87;}
+  .btn-ghost{background:transparent; border:1px solid transparent; color:var(--text-dim);}
+  .btn-ghost:hover{color:var(--text); background:var(--panel-2);}
+  .btn-sm{padding:6px 12px; font-size:12px;}
+  .btn-danger{color:var(--red); border-color:#3A2222;}
+
+  input, select, textarea{
+    background:var(--panel-2); border:1px solid var(--border); color:var(--text);
+    padding:10px 12px; border-radius:8px; font-size:14px; font-family:'Inter',sans-serif;
+    width:100%; outline:none;
+  }
+  input:focus, select:focus, textarea:focus{border-color:var(--accent);}
+  label{font-size:12px; color:var(--text-dim); display:block; margin-bottom:6px; font-weight:500;}
+  .field{margin-bottom:14px;}
+
+  /* ---------- login ---------- */
+  .login-wrap{
+    min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:20px;
+  }
+  .login-card{
+    width:100%; max-width:380px; background:var(--panel); border:1px solid var(--border-soft);
+    border-radius:14px; padding:32px 28px;
+  }
+  .login-header{text-align:center; margin-bottom:28px;}
+  .login-header .brand-mark{margin:0 auto 14px; width:42px; height:42px; border-radius:10px; font-size:15px;}
+  .login-header h1{font-size:18px; font-weight:600; margin-bottom:4px;}
+  .login-header p{font-size:13px; color:var(--text-dim);}
+  .role-toggle{display:flex; gap:8px; margin-bottom:22px; background:var(--panel-2); padding:4px; border-radius:9px; border:1px solid var(--border);}
+  .role-toggle button{
+    flex:1; padding:8px; border-radius:6px; border:none; background:transparent; color:var(--text-dim);
+    font-size:13px; font-weight:500; cursor:pointer; font-family:'Inter',sans-serif;
+  }
+  .role-toggle button.active{background:var(--bg); color:var(--text); border:1px solid var(--border);}
+  .login-error{color:var(--red); font-size:12px; margin-top:10px; text-align:center;}
+  .login-note{font-size:11px; color:var(--text-faint); text-align:center; margin-top:18px; line-height:1.5;}
+
+  /* ---------- dashboard layout ---------- */
+  .layout{display:grid; grid-template-columns:260px 1fr; gap:20px; align-items:start;}
+  @media (max-width:760px){ .layout{grid-template-columns:1fr;} }
+
+  .sidebar{background:var(--panel); border:1px solid var(--border-soft); border-radius:12px; padding:14px; position:sticky; top:20px;}
+  .sidebar-title{font-size:11px; text-transform:uppercase; letter-spacing:0.6px; color:var(--text-faint); padding:6px 8px 10px; font-weight:600;}
+  .client-item{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    padding:10px 10px; border-radius:8px; cursor:pointer; margin-bottom:2px;
+    border:1px solid transparent;
+  }
+  .client-item:hover{background:var(--panel-2);}
+  .client-item.active{background:var(--panel-2); border-color:var(--border);}
+  .client-item .nm{font-size:13.5px; font-weight:500;}
+  .client-item .bal{font-size:11.5px; color:var(--text-dim);}
+  .client-item .pct{font-size:11px; font-weight:600;}
+
+  .panel{background:var(--panel); border:1px solid var(--border-soft); border-radius:12px; padding:22px;}
+  .panel + .panel{margin-top:18px;}
+  .panel-title{font-size:13px; font-weight:600; margin-bottom:16px; display:flex; align-items:center; justify-content:space-between;}
+  .panel-title .sub{font-size:11px; color:var(--text-faint); font-weight:400;}
+
+  .stat-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(140px,1fr)); gap:12px; margin-bottom:18px;}
+  .stat-card{background:var(--panel-2); border:1px solid var(--border); border-radius:10px; padding:14px 16px;}
+  .stat-label{font-size:11px; color:var(--text-dim); margin-bottom:6px; font-weight:500;}
+  .stat-value{font-size:21px; font-weight:600;}
+  .stat-value.green{color:var(--green);}
+
+  table{width:100%; border-collapse:collapse; font-size:13px;}
+  th{text-align:left; color:var(--text-faint); font-weight:500; font-size:11px; text-transform:uppercase; letter-spacing:0.4px; padding:8px 10px; border-bottom:1px solid var(--border-soft);}
+  td{padding:11px 10px; border-bottom:1px solid var(--border-soft);}
+  tr:last-child td{border-bottom:none;}
+  .pill{display:inline-block; padding:3px 9px; border-radius:20px; font-size:12px; font-weight:600;}
+  .pill.up{background:var(--green-dim); color:var(--green);}
+  .pill.down{background:var(--red-dim); color:var(--red);}
+
+  .empty{text-align:center; padding:40px 20px; color:var(--text-faint); font-size:13px;}
+
+  .modal-bg{position:fixed; inset:0; background:rgba(0,0,0,0.55); display:flex; align-items:center; justify-content:center; z-index:50; padding:20px;}
+  .modal{background:var(--panel); border:1px solid var(--border-soft); border-radius:14px; padding:26px; width:100%; max-width:420px;}
+  .modal h3{font-size:15px; font-weight:600; margin-bottom:18px;}
+  .modal-actions{display:flex; gap:10px; margin-top:6px;}
+
+  .chat-box{display:flex; flex-direction:column; height:360px;}
+  .chat-msgs{flex:1; overflow-y:auto; padding-right:4px; display:flex; flex-direction:column; gap:10px;}
+  .msg{max-width:75%; padding:9px 13px; border-radius:12px; font-size:13.5px; line-height:1.45;}
+  .msg-row{display:flex;}
+  .msg-row.mine{justify-content:flex-end;}
+  .msg.mine{background:var(--green-dim); color:#CFFCE6; border-bottom-right-radius:3px;}
+  .msg.theirs{background:var(--panel-2); border:1px solid var(--border); border-bottom-left-radius:3px;}
+  .msg-time{font-size:10px; color:var(--text-faint); margin-top:4px;}
+  .chat-input-row{display:flex; gap:8px; margin-top:12px;}
+
+  .row{display:flex; gap:10px;}
+  .row > *{flex:1;}
+
+  .badge-30{font-size:11px; color:var(--text-faint); margin-left:8px;}
+</style>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script>
+/* ============================== STORAGE HELPERS ============================== */
+/* ============================== SUPABASE STORAGE ============================== */
+const SUPABASE_URL = 'https://sdqxwbyekidctoumosgk.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNkcXh3Ynlla2lkY3RvdW1vc2drIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MTYzOTIsImV4cCI6MjA5ODM5MjM5Mn0.OwO8v7GsO2qj7OIP10MU07B-2caT610zYfASCfJGp8Y';
+
+async function sGet(key){
+  try{
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/portal_data?key=eq.${encodeURIComponent(key)}&select=value`, {
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+      }
+    });
+    const rows = await res.json();
+    return (rows && rows.length) ? rows[0].value : null;
+  }catch(e){ console.error('storage get failed', e); return null; }
+}
+async function sSet(key, value){
+  try{
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/portal_data`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'resolution=merge-duplicates'
+      },
+      body: JSON.stringify([{ key, value }])
+    });
+    return res.ok;
+  }catch(e){ console.error('storage set failed', e); return false; }
+}
+function uid(){ return Math.random().toString(36).slice(2,10) + Date.now().toString(36); }
+
+/* ============================== APP STATE ============================== */
+let state = {
+  view: 'login',        // login | admin | client
+  loginRole: 'admin',    // admin | client
+  loginError: '',
+  adminConfigured: null, // {passcode}
+  clients: [],
+  currentClientId: null, // for admin viewing a client
+  loggedClient: null,    // for client session
+  records: {},           // clientId -> array
+  chats: {},             // clientId -> array
+  modal: null,           // 'addClient' | 'editClient'
+};
+
+function render(){ window.__render(); }
+
+/* ============================== DATA LOADERS ============================== */
+async function loadAdminConfig(){
+  state.adminConfigured = await sGet('admin-config', true);
+}
+async function loadClients(){
+  state.clients = (await sGet('clients', true)) || [];
+}
+async function loadRecords(clientId){
+  state.records[clientId] = (await sGet('records:'+clientId, true)) || [];
+}
+async function loadChat(clientId){
+  state.chats[clientId] = (await sGet('chat:'+clientId, true)) || [];
+}
+
+/* ============================== CALCULATIONS ============================== */
+function computeLedger(clientId, initialDeposit){
+  const recs = (state.records[clientId] || []).slice().sort((a,b)=> a.year-b.year || a.monthNum-b.monthNum);
+  let balance = initialDeposit;
+  let abuzarPool = 0;
+  let azfarPool = 0;
+  let totalClientProfit = 0;
+  const ledger = recs.map(r=>{
+    const before = balance;
+    const abuzarBefore = abuzarPool;
+    const azfarBefore = azfarPool;
+    const rate = r.pct/100;
+
+    const grossGain = before * rate;
+    const clientGain = grossGain * 0.70;
+    const abuzarShare = grossGain * 0.15;
+    const azfarShare = grossGain * 0.15;
+
+    balance = before + clientGain;
+    abuzarPool = abuzarBefore * (1+rate) + abuzarShare;
+    azfarPool = azfarBefore * (1+rate) + azfarShare;
+
+    totalClientProfit += clientGain;
+
+    return {
+      ...r, before, grossGain, clientGain, after: balance,
+      abuzarBefore, abuzarShare, abuzarAfter: abuzarPool,
+      azfarBefore, azfarShare, azfarAfter: azfarPool
+    };
+  });
+  return { ledger, currentBalance: balance, totalClientProfit, abuzarPool, azfarPool, totalAdminCut: abuzarPool + azfarPool };
+}
+
+function fmtMoney(n){
+  return '$' + n.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+function fmtPct(n){
+  const s = n.toFixed(2);
+  return (n>=0?'+':'') + s + '%';
+}
+function monthName(m){
+  return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m-1];
+}
+
+/* ============================== RENDER: LOGIN ============================== */
+function ViewLogin(){
+  const setRole = (r)=>{ state.loginRole = r; state.loginError=''; render(); };
+
+  const html = document.createElement('div');
+  html.className = 'login-wrap';
+  html.innerHTML = `
+    <div class="login-card">
+      <div class="login-header">
+        <div class="brand-mark">A2</div>
+        <h1>A2 Capital</h1>
+        <p>Track your account, month by month</p>
+      </div>
+      <div class="role-toggle">
+        <button data-role="admin" class="${state.loginRole==='admin'?'active':''}">Admin</button>
+        <button data-role="client" class="${state.loginRole==='client'?'active':''}">Client</button>
+      </div>
+      <div id="login-fields"></div>
+      <div class="login-error">${state.loginError || ''}</div>
+      <div class="login-note">Your data is stored for this portal only. Keep your passcode private.</div>
+    </div>
+  `;
+  html.querySelectorAll('[data-role]').forEach(b=>{
+    b.onclick = ()=> setRole(b.dataset.role);
+  });
+
+  const fieldsHost = html.querySelector('#login-fields');
+
+  if(state.loginRole === 'admin'){
+    if(!state.adminConfigured){
+      fieldsHost.innerHTML = `
+        <div class="field"><label>Set an admin passcode</label><input id="np1" type="password" placeholder="Choose a passcode"></div>
+        <div class="field"><label>Confirm passcode</label><input id="np2" type="password" placeholder="Re-enter passcode"></div>
+        <button class="btn btn-primary" id="setup-btn" style="width:100%">Create admin account</button>
+      `;
+      fieldsHost.querySelector('#setup-btn').onclick = async ()=>{
+        const p1 = fieldsHost.querySelector('#np1').value.trim();
+        const p2 = fieldsHost.querySelector('#np2').value.trim();
+        if(!p1 || p1.length<4){ state.loginError='Passcode must be at least 4 characters.'; render(); return; }
+        if(p1!==p2){ state.loginError='Passcodes do not match.'; render(); return; }
+        await sSet('admin-config', {passcode:p1}, true);
+        state.adminConfigured = {passcode:p1};
+        state.loginError='';
+        render();
+      };
+    } else {
+      fieldsHost.innerHTML = `
+        <div class="field"><label>Passcode</label><input id="ap" type="password" placeholder="Enter admin passcode"></div>
+        <button class="btn btn-primary" id="login-btn" style="width:100%">Log in</button>
+      `;
+      const tryLogin = async ()=>{
+        const p = fieldsHost.querySelector('#ap').value.trim();
+        if(p === state.adminConfigured.passcode){
+          state.view='admin'; state.loginError='';
+          await loadClients();
+          render();
+        } else {
+          state.loginError='Incorrect passcode.'; render();
+        }
+      };
+      fieldsHost.querySelector('#login-btn').onclick = tryLogin;
+      fieldsHost.querySelector('#ap').addEventListener('keydown', e=>{ if(e.key==='Enter') tryLogin(); });
+    }
+  } else {
+    fieldsHost.innerHTML = `
+      <div class="field"><label>Email</label><input id="ce" type="email" placeholder="name@email.com"></div>
+      <div class="field"><label>Passcode</label><input id="cp" type="password" placeholder="Passcode given by your advisor"></div>
+      <button class="btn btn-primary" id="cli-login-btn" style="width:100%">Log in</button>
+    `;
+    const tryLogin = async ()=>{
+      const email = fieldsHost.querySelector('#ce').value.trim().toLowerCase();
+      const pass = fieldsHost.querySelector('#cp').value.trim();
+      await loadClients();
+      const match = state.clients.find(c=> c.email.toLowerCase()===email && c.passcode===pass);
+      if(match){
+        state.loggedClient = match;
+        state.view='client';
+        state.loginError='';
+        await loadRecords(match.id);
+        await loadChat(match.id);
+        render();
+      } else {
+        state.loginError='No match found. Check your email and passcode.'; render();
+      }
+    };
+    fieldsHost.querySelector('#cli-login-btn').onclick = tryLogin;
+    fieldsHost.querySelector('#cp').addEventListener('keydown', e=>{ if(e.key==='Enter') tryLogin(); });
+  }
+
+  return html;
+}
+
+/* ============================== RENDER: ADMIN ============================== */
+function ViewAdmin(){
+  const wrap = document.createElement('div');
+  wrap.className = 'app';
+
+  // topbar
+  const top = document.createElement('div');
+  top.className = 'topbar';
+  top.innerHTML = `
+    <div class="brand"><div class="brand-mark">A2</div><div class="brand-name">A2 Capital — admin desk</div></div>
+    <div class="topbar-right">
+      <span>Admin</span>
+      <button class="btn btn-ghost btn-sm" id="logout-btn">Log out</button>
+    </div>
+  `;
+  top.querySelector('#logout-btn').onclick = ()=>{ state.view='login'; state.currentClientId=null; render(); };
+  wrap.appendChild(top);
+
+  const layout = document.createElement('div');
+  layout.className = 'layout';
+
+  // ---- sidebar ----
+  const sidebar = document.createElement('div');
+  sidebar.className = 'sidebar';
+  let sidebarHtml = `<div class="sidebar-title">Clients (${state.clients.length})</div>`;
+  if(state.clients.length===0){
+    sidebarHtml += `<div class="empty" style="padding:24px 8px;">No clients yet.</div>`;
+  } else {
+    state.clients.forEach(c=>{
+      const recs = state.records[c.id];
+      let balText = fmtMoney(c.initialDeposit);
+      let pctText = '';
+      if(recs){
+        const calc = computeLedger(c.id, c.initialDeposit);
+        balText = fmtMoney(calc.currentBalance);
+        if(calc.ledger.length){
+          const last = calc.ledger[calc.ledger.length-1];
+          pctText = `<span class="pct" style="color:${last.pct>=0?'var(--green)':'var(--red)'}">${fmtPct(last.pct)}</span>`;
+        }
+      }
+      sidebarHtml += `
+        <div class="client-item ${state.currentClientId===c.id?'active':''}" data-id="${c.id}">
+          <div>
+            <div class="nm">${c.name}</div>
+            <div class="bal mono">${balText}</div>
+          </div>
+          ${pctText}
+        </div>
+      `;
+    });
+  }
+  sidebar.innerHTML = sidebarHtml;
+  sidebar.innerHTML += `<button class="btn btn-primary btn-sm" id="add-client-btn" style="width:100%; margin-top:10px;">+ Add client</button>`;
+  layout.appendChild(sidebar);
+
+  // ---- main content ----
+  const main = document.createElement('div');
+
+  // overview stats (always visible at top)
+  const allCalcs = state.clients.map(c=> state.records[c.id] ? computeLedger(c.id, c.initialDeposit) : null);
+  const totalAUM = state.clients.reduce((sum,c,i)=> sum + (allCalcs[i] ? allCalcs[i].currentBalance : c.initialDeposit), 0);
+  const totalAbuzarPool = allCalcs.reduce((sum,calc)=> sum + (calc? calc.abuzarPool : 0), 0);
+  const totalAzfarPool = allCalcs.reduce((sum,calc)=> sum + (calc? calc.azfarPool : 0), 0);
+  const totalClientProfit = allCalcs.reduce((sum,calc)=> sum + (calc? calc.totalClientProfit : 0), 0);
+
+  const overview = document.createElement('div');
+  overview.className = 'panel';
+  overview.innerHTML = `
+    <div class="panel-title">Overview</div>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-label">Assets under management</div><div class="stat-value mono">${fmtMoney(totalAUM)}</div></div>
+      <div class="stat-card"><div class="stat-label">Client profit distributed</div><div class="stat-value green mono">${fmtMoney(totalClientProfit)}</div></div>
+      <div class="stat-card"><div class="stat-label">Abuzar's pool (15%, compounding)</div><div class="stat-value green mono">${fmtMoney(totalAbuzarPool)}</div></div>
+      <div class="stat-card"><div class="stat-label">Azfar's pool (15%, compounding)</div><div class="stat-value green mono">${fmtMoney(totalAzfarPool)}</div></div>
+      <div class="stat-card"><div class="stat-label">Active clients</div><div class="stat-value">${state.clients.length}</div></div>
+    </div>
+  `;
+  main.appendChild(overview);
+
+  if(state.currentClientId){
+    const client = state.clients.find(c=>c.id===state.currentClientId);
+    if(client){
+      main.appendChild(ClientDetailPanel(client, true));
+    }
+  } else {
+    const hint = document.createElement('div');
+    hint.className = 'panel';
+    hint.innerHTML = `<div class="empty">Select a client from the left to enter their monthly result, view their ledger, or chat with them.</div>`;
+    main.appendChild(hint);
+  }
+
+  layout.appendChild(main);
+  wrap.appendChild(layout);
+
+  sidebar.querySelectorAll('.client-item').forEach(el=>{
+    el.onclick = async ()=>{
+      const id = el.dataset.id;
+      state.currentClientId = id;
+      await loadRecords(id);
+      await loadChat(id);
+      render();
+    };
+  });
+  sidebar.querySelector('#add-client-btn').onclick = ()=>{ state.modal='addClient'; render(); };
+
+  return wrap;
+}
+
+/* ---- client detail panel (used in admin view) ---- */
+function ClientDetailPanel(client, isAdmin){
+  const calc = computeLedger(client.id, client.initialDeposit);
+  const host = document.createElement('div');
+
+  const info = document.createElement('div');
+  info.className = 'panel';
+  info.innerHTML = `
+    <div class="panel-title">
+      <span>${client.name} <span class="sub">${client.email} · joined ${client.joinDate}</span></span>
+      ${isAdmin ? '<button class="btn btn-ghost btn-sm" id="edit-client-btn">Edit</button>' : ''}
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-label">Current balance</div><div class="stat-value mono">${fmtMoney(calc.currentBalance)}</div></div>
+      <div class="stat-card"><div class="stat-label">Initial deposit</div><div class="stat-value mono">${fmtMoney(client.initialDeposit)}</div></div>
+      <div class="stat-card"><div class="stat-label">Total profit earned</div><div class="stat-value green mono">${fmtMoney(calc.totalClientProfit)}</div></div>
+      ${isAdmin ? `
+      <div class="stat-card"><div class="stat-label">Abuzar's pool from this client</div><div class="stat-value green mono">${fmtMoney(calc.abuzarPool)}</div></div>
+      <div class="stat-card"><div class="stat-label">Azfar's pool from this client</div><div class="stat-value green mono">${fmtMoney(calc.azfarPool)}</div></div>
+      ` : ''}
+    </div>
+  `;
+  host.appendChild(info);
+
+  if(isAdmin){
+    const addRecord = document.createElement('div');
+    addRecord.className = 'panel';
+    const now = new Date();
+    addRecord.innerHTML = `
+      <div class="panel-title">Add monthly result <span class="sub">gross %, before the 70/30 split</span></div>
+      <div class="row">
+        <div class="field">
+          <label>Month</label>
+          <select id="rec-month">
+            ${Array.from({length:12}).map((_,i)=>`<option value="${i+1}" ${i+1===now.getMonth()+1?'selected':''}>${monthName(i+1)}</option>`).join('')}
+          </select>
+        </div>
+        <div class="field">
+          <label>Year</label>
+          <input id="rec-year" type="number" value="${now.getFullYear()}">
+        </div>
+        <div class="field">
+          <label>Gross % return</label>
+          <input id="rec-pct" type="number" step="0.01" placeholder="e.g. 18.5">
+        </div>
+      </div>
+      <button class="btn btn-primary" id="save-record-btn">Save month</button>
+    `;
+    host.appendChild(addRecord);
+    addRecord.querySelector('#save-record-btn').onclick = async ()=>{
+      const monthNum = parseInt(addRecord.querySelector('#rec-month').value);
+      const year = parseInt(addRecord.querySelector('#rec-year').value);
+      const pct = parseFloat(addRecord.querySelector('#rec-pct').value);
+      if(isNaN(pct)){ alert('Enter a valid percentage.'); return; }
+      if(pct < 0){ alert('Negative months are not supported in this version. If this happens, let me know and I will add it.'); return; }
+      const existing = state.records[client.id] || [];
+      if(existing.find(r=>r.monthNum===monthNum && r.year===year)){
+        if(!confirm('A record for this month already exists. Replace it?')) return;
+      }
+      const filtered = existing.filter(r=>!(r.monthNum===monthNum && r.year===year));
+      filtered.push({ id: uid(), monthNum, year, pct, addedAt: Date.now() });
+      state.records[client.id] = filtered;
+      await sSet('records:'+client.id, filtered, true);
+      render();
+    };
+  }
+
+  // ledger table
+  const ledgerPanel = document.createElement('div');
+  ledgerPanel.className = 'panel';
+  let rows = '';
+  if(calc.ledger.length===0){
+    rows = `<tr><td colspan="5" class="empty">No monthly results recorded yet.</td></tr>`;
+  } else {
+    calc.ledger.slice().reverse().forEach(r=>{
+      rows += `
+        <tr>
+          <td>${monthName(r.monthNum)} ${r.year}</td>
+          <td><span class="pill ${r.pct>=0?'up':'down'}">${fmtPct(r.pct)}</span></td>
+          <td class="mono">${fmtMoney(r.before)}</td>
+          <td class="mono" style="color:var(--green)">+${fmtMoney(r.clientGain)}</td>
+          <td class="mono">${fmtMoney(r.after)}</td>
+          ${isAdmin ? `<td class="mono">${fmtMoney(r.abuzarAfter)}</td><td class="mono">${fmtMoney(r.azfarAfter)}</td>` : ''}
+        </tr>
+      `;
+    });
+  }
+  ledgerPanel.innerHTML = `
+    <div class="panel-title">Monthly ledger</div>
+    <table>
+      <thead><tr><th>Month</th><th>Gross return</th><th>Balance before</th><th>Client profit (70%)</th><th>Balance after</th>${isAdmin ? '<th>Abuzar pool</th><th>Azfar pool</th>' : ''}</tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    ${isAdmin ? '<div style="font-size:11px; color:var(--text-faint); margin-top:10px;">Abuzar and Azfar pool columns show the running balance after each month, including both the prior pool growing at that month\u2019s percent and the new 15% share.</div>' : ''}
+  `;
+  host.appendChild(ledgerPanel);
+
+  // chat
+  const chatPanel = document.createElement('div');
+  chatPanel.className = 'panel';
+  chatPanel.innerHTML = `<div class="panel-title">Messages with ${isAdmin? client.name : 'your advisor'}</div>`;
+  const chatBox = document.createElement('div');
+  chatBox.className = 'chat-box';
+  const msgsHost = document.createElement('div');
+  msgsHost.className = 'chat-msgs';
+  const msgs = state.chats[client.id] || [];
+  if(msgs.length===0){
+    msgsHost.innerHTML = `<div class="empty">No messages yet. Say hello.</div>`;
+  } else {
+    msgs.forEach(m=>{
+      const mine = isAdmin ? m.sender==='admin' : m.sender==='client';
+      const row = document.createElement('div');
+      row.className = 'msg-row ' + (mine?'mine':'');
+      row.innerHTML = `<div class="msg ${mine?'mine':'theirs'}">${escapeHtml(m.text)}<div class="msg-time">${new Date(m.ts).toLocaleString()}</div></div>`;
+      msgsHost.appendChild(row);
+    });
+  }
+  chatBox.appendChild(msgsHost);
+  const inputRow = document.createElement('div');
+  inputRow.className = 'chat-input-row';
+  inputRow.innerHTML = `<input id="chat-input" placeholder="Type a message"><button class="btn btn-primary" id="chat-send">Send</button>`;
+  chatBox.appendChild(inputRow);
+  chatPanel.appendChild(chatBox);
+  host.appendChild(chatPanel);
+
+  setTimeout(()=>{ msgsHost.scrollTop = msgsHost.scrollHeight; }, 0);
+
+  const sendMsg = async ()=>{
+    const inp = inputRow.querySelector('#chat-input');
+    const text = inp.value.trim();
+    if(!text) return;
+    const list = state.chats[client.id] || [];
+    list.push({ id: uid(), sender: isAdmin?'admin':'client', text, ts: Date.now() });
+    state.chats[client.id] = list;
+    await sSet('chat:'+client.id, list, true);
+    inp.value='';
+    render();
+  };
+  inputRow.querySelector('#chat-send').onclick = sendMsg;
+  inputRow.querySelector('#chat-input').addEventListener('keydown', e=>{ if(e.key==='Enter') sendMsg(); });
+
+  if(isAdmin){
+    info.querySelector('#edit-client-btn')?.addEventListener('click', ()=>{ state.modal='editClient'; render(); });
+  }
+
+  return host;
+}
+
+function escapeHtml(s){
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+/* ============================== RENDER: CLIENT VIEW ============================== */
+function ViewClient(){
+  const wrap = document.createElement('div');
+  wrap.className = 'app';
+  const client = state.loggedClient;
+
+  const top = document.createElement('div');
+  top.className = 'topbar';
+  top.innerHTML = `
+    <div class="brand"><div class="brand-mark">A2</div><div class="brand-name">A2 Capital</div></div>
+    <div class="topbar-right">
+      <span>${client.email}</span>
+      <button class="btn btn-ghost btn-sm" id="logout-btn">Log out</button>
+    </div>
+  `;
+  top.querySelector('#logout-btn').onclick = ()=>{ state.view='login'; state.loggedClient=null; render(); };
+  wrap.appendChild(top);
+
+  wrap.appendChild(ClientDetailPanel(client, false));
+  return wrap;
+}
+
+/* ============================== MODALS ============================== */
+function renderModal(){
+  if(!state.modal) return null;
+  const bg = document.createElement('div');
+  bg.className = 'modal-bg';
+  bg.onclick = (e)=>{ if(e.target===bg){ state.modal=null; render(); } };
+
+  const modal = document.createElement('div');
+  modal.className = 'modal';
+
+  if(state.modal === 'addClient'){
+    modal.innerHTML = `
+      <h3>Add a new client</h3>
+      <div class="field"><label>Full name</label><input id="m-name" placeholder="Client name"></div>
+      <div class="field"><label>Email</label><input id="m-email" type="email" placeholder="name@email.com"></div>
+      <div class="field"><label>Phone</label><input id="m-phone" placeholder="03xx-xxxxxxx"></div>
+      <div class="row">
+        <div class="field"><label>Join date</label><input id="m-join" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
+        <div class="field"><label>Initial deposit (USD)</label><input id="m-deposit" type="number" step="0.01" placeholder="1000"></div>
+      </div>
+      <div class="field"><label>Client passcode <span class="badge-30">(share this with them)</span></label><input id="m-pass" placeholder="Set a passcode"></div>
+      <div class="modal-actions">
+        <button class="btn" id="m-cancel" style="flex:1">Cancel</button>
+        <button class="btn btn-primary" id="m-save" style="flex:1">Add client</button>
+      </div>
+    `;
+    modal.querySelector('#m-save').onclick = async ()=>{
+      const name = modal.querySelector('#m-name').value.trim();
+      const email = modal.querySelector('#m-email').value.trim();
+      const phone = modal.querySelector('#m-phone').value.trim();
+      const joinDate = modal.querySelector('#m-join').value;
+      const deposit = parseFloat(modal.querySelector('#m-deposit').value);
+      const pass = modal.querySelector('#m-pass').value.trim();
+      if(!name || !email || !pass || isNaN(deposit)){
+        alert('Please fill in name, email, passcode, and initial deposit.');
+        return;
+      }
+      if(state.clients.find(c=>c.email.toLowerCase()===email.toLowerCase())){
+        alert('A client with this email already exists.');
+        return;
+      }
+      const newClient = { id: uid(), name, email, phone, joinDate, initialDeposit: deposit, passcode: pass };
+      const updated = [...state.clients, newClient];
+      state.clients = updated;
+      await sSet('clients', updated, true);
+      state.modal = null;
+      state.currentClientId = newClient.id;
+      await loadRecords(newClient.id);
+      await loadChat(newClient.id);
+      render();
+    };
+  }
+
+  if(state.modal === 'editClient'){
+    const client = state.clients.find(c=>c.id===state.currentClientId);
+    modal.innerHTML = `
+      <h3>Edit ${client.name}</h3>
+      <div class="field"><label>Full name</label><input id="m-name" value="${client.name}"></div>
+      <div class="field"><label>Email</label><input id="m-email" value="${client.email}"></div>
+      <div class="field"><label>Phone</label><input id="m-phone" value="${client.phone||''}"></div>
+      <div class="field"><label>Client passcode</label><input id="m-pass" value="${client.passcode}"></div>
+      <div class="modal-actions">
+        <button class="btn btn-danger" id="m-delete" style="flex:1">Remove client</button>
+        <button class="btn btn-primary" id="m-save" style="flex:1">Save</button>
+      </div>
+      <button class="btn btn-ghost" id="m-cancel" style="width:100%; margin-top:10px;">Cancel</button>
+    `;
+    modal.querySelector('#m-save').onclick = async ()=>{
+      client.name = modal.querySelector('#m-name').value.trim();
+      client.email = modal.querySelector('#m-email').value.trim();
+      client.phone = modal.querySelector('#m-phone').value.trim();
+      client.passcode = modal.querySelector('#m-pass').value.trim();
+      await sSet('clients', state.clients, true);
+      state.modal = null;
+      render();
+    };
+    modal.querySelector('#m-delete').onclick = async ()=>{
+      if(!confirm('Remove this client? Their records and chat history will stay in storage but they will no longer appear in your list.')) return;
+      state.clients = state.clients.filter(c=>c.id!==client.id);
+      await sSet('clients', state.clients, true);
+      state.modal = null;
+      state.currentClientId = null;
+      render();
+    };
+  }
+
+  modal.querySelector('#m-cancel')?.addEventListener('click', ()=>{ state.modal=null; render(); });
+
+  bg.appendChild(modal);
+  return bg;
+}
+
+/* ============================== MAIN RENDER ============================== */
+window.__render = function(){
+  const root = document.getElementById('root');
+  root.innerHTML = '';
+  let view;
+  if(state.view==='login') view = ViewLogin();
+  else if(state.view==='admin') view = ViewAdmin();
+  else if(state.view==='client') view = ViewClient();
+  root.appendChild(view);
+  const modal = renderModal();
+  if(modal) root.appendChild(modal);
+};
+
+(async function init(){
+  await loadAdminConfig();
+  render();
+})();
+</script>
+</body>
+</html>

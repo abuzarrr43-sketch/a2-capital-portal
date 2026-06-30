@@ -224,12 +224,19 @@ async function loadChat(clientId){
 }
 
 /* ============================== CALCULATIONS ============================== */
-function computeLedger(clientId, initialDeposit){
-  const recs = (state.records[clientId] || []).slice().sort((a,b)=> a.year-b.year || a.monthNum-b.monthNum);
-  let balance = initialDeposit;
+function computeLedger(client){
+  const recs = (state.records[client.id] || []).slice().sort((a,b)=> a.year-b.year || a.monthNum-b.monthNum);
+
+  // Per-client settings, with safe fallbacks for older client records
+  const clientPct = (client.clientProfitPct !== undefined && client.clientProfitPct !== null) ? client.clientProfitPct : 70;
+  const ownerType = client.ownerType || 'shared'; // 'abuzar' | 'azfar' | 'shared'
+  const abuzarSplitOfCut = (client.splitAbuzarPct !== undefined && client.splitAbuzarPct !== null) ? client.splitAbuzarPct : 50;
+
+  let balance = client.initialDeposit;
   let abuzarPool = 0;
   let azfarPool = 0;
   let totalClientProfit = 0;
+
   const ledger = recs.map(r=>{
     const before = balance;
     const abuzarBefore = abuzarPool;
@@ -237,9 +244,16 @@ function computeLedger(clientId, initialDeposit){
     const rate = r.pct/100;
 
     const grossGain = before * rate;
-    const clientGain = grossGain * 0.70;
-    const abuzarShare = grossGain * 0.15;
-    const azfarShare = grossGain * 0.15;
+    const clientGain = grossGain * (clientPct/100);
+    const adminGain = grossGain - clientGain; // total cut, before splitting between partners
+
+    let abuzarShare = 0, azfarShare = 0;
+    if(ownerType === 'abuzar'){ abuzarShare = adminGain; }
+    else if(ownerType === 'azfar'){ azfarShare = adminGain; }
+    else { // shared
+      abuzarShare = adminGain * (abuzarSplitOfCut/100);
+      azfarShare = adminGain * (1 - abuzarSplitOfCut/100);
+    }
 
     balance = before + clientGain;
     abuzarPool = abuzarBefore * (1+rate) + abuzarShare;
@@ -253,7 +267,7 @@ function computeLedger(clientId, initialDeposit){
       azfarBefore, azfarShare, azfarAfter: azfarPool
     };
   });
-  return { ledger, currentBalance: balance, totalClientProfit, abuzarPool, azfarPool, totalAdminCut: abuzarPool + azfarPool };
+  return { ledger, currentBalance: balance, totalClientProfit, abuzarPool, azfarPool, totalAdminCut: abuzarPool + azfarPool, clientPct, ownerType, abuzarSplitOfCut };
 }
 
 function fmtMoney(n){
@@ -392,17 +406,19 @@ function ViewAdmin(){
       let balText = fmtMoney(c.initialDeposit);
       let pctText = '';
       if(recs){
-        const calc = computeLedger(c.id, c.initialDeposit);
+        const calc = computeLedger(c);
         balText = fmtMoney(calc.currentBalance);
         if(calc.ledger.length){
           const last = calc.ledger[calc.ledger.length-1];
           pctText = `<span class="pct" style="color:${last.pct>=0?'var(--green)':'var(--red)'}">${fmtPct(last.pct)}</span>`;
         }
       }
+      const ow = c.ownerType || 'shared';
+      const owTag = ow==='abuzar' ? 'Abuzar' : ow==='azfar' ? 'Azfar' : 'Shared';
       sidebarHtml += `
         <div class="client-item ${state.currentClientId===c.id?'active':''}" data-id="${c.id}">
           <div>
-            <div class="nm">${c.name}</div>
+            <div class="nm">${c.name} <span style="font-size:10px; color:var(--text-faint); font-weight:400;">· ${owTag}</span></div>
             <div class="bal mono">${balText}</div>
           </div>
           ${pctText}
@@ -418,7 +434,7 @@ function ViewAdmin(){
   const main = document.createElement('div');
 
   // overview stats (always visible at top)
-  const allCalcs = state.clients.map(c=> state.records[c.id] ? computeLedger(c.id, c.initialDeposit) : null);
+  const allCalcs = state.clients.map(c=> state.records[c.id] ? computeLedger(c) : null);
   const totalAUM = state.clients.reduce((sum,c,i)=> sum + (allCalcs[i] ? allCalcs[i].currentBalance : c.initialDeposit), 0);
   const totalAbuzarPool = allCalcs.reduce((sum,calc)=> sum + (calc? calc.abuzarPool : 0), 0);
   const totalAzfarPool = allCalcs.reduce((sum,calc)=> sum + (calc? calc.azfarPool : 0), 0);
@@ -469,22 +485,27 @@ function ViewAdmin(){
 
 /* ---- client detail panel (used in admin view) ---- */
 function ClientDetailPanel(client, isAdmin){
-  const calc = computeLedger(client.id, client.initialDeposit);
+  const calc = computeLedger(client);
   const host = document.createElement('div');
 
   const info = document.createElement('div');
   info.className = 'panel';
+  const ownerLabel = calc.ownerType==='abuzar' ? 'Abuzar only' : calc.ownerType==='azfar' ? 'Azfar only' : 'Shared';
+  const splitNote = calc.ownerType==='shared' ? ` (Abuzar ${calc.abuzarSplitOfCut}% / Azfar ${100-calc.abuzarSplitOfCut}% of the cut)` : '';
   info.innerHTML = `
     <div class="panel-title">
       <span>${client.name} <span class="sub">${client.email} · joined ${client.joinDate}</span></span>
       ${isAdmin ? '<button class="btn btn-ghost btn-sm" id="edit-client-btn">Edit</button>' : ''}
     </div>
+    ${isAdmin ? `<div class="sub" style="margin-bottom:14px;">Client keeps ${calc.clientPct}% of profit · Owner: ${ownerLabel}${splitNote}</div>` : ''}
     <div class="stat-grid">
       <div class="stat-card"><div class="stat-label">Current balance</div><div class="stat-value mono">${fmtMoney(calc.currentBalance)}</div></div>
       <div class="stat-card"><div class="stat-label">Initial deposit</div><div class="stat-value mono">${fmtMoney(client.initialDeposit)}</div></div>
       <div class="stat-card"><div class="stat-label">Total profit earned</div><div class="stat-value green mono">${fmtMoney(calc.totalClientProfit)}</div></div>
-      ${isAdmin ? `
+      ${isAdmin && calc.ownerType!=='azfar' ? `
       <div class="stat-card"><div class="stat-label">Abuzar's pool from this client</div><div class="stat-value green mono">${fmtMoney(calc.abuzarPool)}</div></div>
+      ` : ''}
+      ${isAdmin && calc.ownerType!=='abuzar' ? `
       <div class="stat-card"><div class="stat-label">Azfar's pool from this client</div><div class="stat-value green mono">${fmtMoney(calc.azfarPool)}</div></div>
       ` : ''}
     </div>
@@ -496,7 +517,7 @@ function ClientDetailPanel(client, isAdmin){
     addRecord.className = 'panel';
     const now = new Date();
     addRecord.innerHTML = `
-      <div class="panel-title">Add monthly result <span class="sub">gross %, before the 70/30 split</span></div>
+      <div class="panel-title">Add monthly result <span class="sub">gross %, before this client's ${calc.clientPct}/${100-calc.clientPct} split</span></div>
       <div class="row">
         <div class="field">
           <label>Month</label>
@@ -549,7 +570,8 @@ function ClientDetailPanel(client, isAdmin){
           <td class="mono">${fmtMoney(r.before)}</td>
           <td class="mono" style="color:var(--green)">+${fmtMoney(r.clientGain)}</td>
           <td class="mono">${fmtMoney(r.after)}</td>
-          ${isAdmin ? `<td class="mono">${fmtMoney(r.abuzarAfter)}</td><td class="mono">${fmtMoney(r.azfarAfter)}</td>` : ''}
+          ${isAdmin && calc.ownerType!=='azfar' ? `<td class="mono">${fmtMoney(r.abuzarAfter)}</td>` : ''}
+          ${isAdmin && calc.ownerType!=='abuzar' ? `<td class="mono">${fmtMoney(r.azfarAfter)}</td>` : ''}
         </tr>
       `;
     });
@@ -557,10 +579,10 @@ function ClientDetailPanel(client, isAdmin){
   ledgerPanel.innerHTML = `
     <div class="panel-title">Monthly ledger</div>
     <table>
-      <thead><tr><th>Month</th><th>Gross return</th><th>Balance before</th><th>Client profit (70%)</th><th>Balance after</th>${isAdmin ? '<th>Abuzar pool</th><th>Azfar pool</th>' : ''}</tr></thead>
+      <thead><tr><th>Month</th><th>Gross return</th><th>Balance before</th><th>Client profit (${calc.clientPct}%)</th><th>Balance after</th>${isAdmin && calc.ownerType!=='azfar' ? '<th>Abuzar pool</th>' : ''}${isAdmin && calc.ownerType!=='abuzar' ? '<th>Azfar pool</th>' : ''}</tr></thead>
       <tbody>${rows}</tbody>
     </table>
-    ${isAdmin ? '<div style="font-size:11px; color:var(--text-faint); margin-top:10px;">Abuzar and Azfar pool columns show the running balance after each month, including both the prior pool growing at that month\u2019s percent and the new 15% share.</div>' : ''}
+    ${isAdmin ? '<div style="font-size:11px; color:var(--text-faint); margin-top:10px;">Pool columns show the running balance after each month, including both the prior pool growing at that month\u2019s percent and the new share from this client\u2019s split.</div>' : ''}
   `;
   host.appendChild(ledgerPanel);
 
@@ -664,11 +686,25 @@ function renderModal(){
         <div class="field"><label>Initial deposit (USD)</label><input id="m-deposit" type="number" step="0.01" placeholder="1000"></div>
       </div>
       <div class="field"><label>Client passcode <span class="badge-30">(share this with them)</span></label><input id="m-pass" placeholder="Set a passcode"></div>
+      <div class="field"><label>Client's share of profit (%) <span class="badge-30">e.g. 70, or 100 for no fee</span></label><input id="m-clientpct" type="number" step="0.1" min="0" max="100" value="70"></div>
+      <div class="field"><label>Whose client is this?</label>
+        <select id="m-owner">
+          <option value="shared">Shared (Abuzar + Azfar)</option>
+          <option value="abuzar">Abuzar only</option>
+          <option value="azfar">Azfar only</option>
+        </select>
+      </div>
+      <div class="field" id="m-splitwrap"><label>Abuzar's share of the cut (%) <span class="badge-30">rest goes to Azfar</span></label><input id="m-split" type="number" step="0.1" min="0" max="100" value="50"></div>
       <div class="modal-actions">
         <button class="btn" id="m-cancel" style="flex:1">Cancel</button>
         <button class="btn btn-primary" id="m-save" style="flex:1">Add client</button>
       </div>
     `;
+    const ownerSel = modal.querySelector('#m-owner');
+    const splitWrap = modal.querySelector('#m-splitwrap');
+    const toggleSplit = ()=>{ splitWrap.style.display = ownerSel.value==='shared' ? 'block' : 'none'; };
+    ownerSel.addEventListener('change', toggleSplit);
+    toggleSplit();
     modal.querySelector('#m-save').onclick = async ()=>{
       const name = modal.querySelector('#m-name').value.trim();
       const email = modal.querySelector('#m-email').value.trim();
@@ -676,15 +712,26 @@ function renderModal(){
       const joinDate = modal.querySelector('#m-join').value;
       const deposit = parseFloat(modal.querySelector('#m-deposit').value);
       const pass = modal.querySelector('#m-pass').value.trim();
+      const clientProfitPct = parseFloat(modal.querySelector('#m-clientpct').value);
+      const ownerType = modal.querySelector('#m-owner').value;
+      const splitAbuzarPct = parseFloat(modal.querySelector('#m-split').value);
       if(!name || !email || !pass || isNaN(deposit)){
         alert('Please fill in name, email, passcode, and initial deposit.');
+        return;
+      }
+      if(isNaN(clientProfitPct) || clientProfitPct < 0 || clientProfitPct > 100){
+        alert('Client profit share must be a number between 0 and 100.');
         return;
       }
       if(state.clients.find(c=>c.email.toLowerCase()===email.toLowerCase())){
         alert('A client with this email already exists.');
         return;
       }
-      const newClient = { id: uid(), name, email, phone, joinDate, initialDeposit: deposit, passcode: pass };
+      const newClient = {
+        id: uid(), name, email, phone, joinDate, initialDeposit: deposit, passcode: pass,
+        clientProfitPct, ownerType,
+        splitAbuzarPct: isNaN(splitAbuzarPct) ? 50 : splitAbuzarPct
+      };
       const updated = [...state.clients, newClient];
       state.clients = updated;
       await sSet('clients', updated, true);
@@ -698,23 +745,49 @@ function renderModal(){
 
   if(state.modal === 'editClient'){
     const client = state.clients.find(c=>c.id===state.currentClientId);
+    const curPct = (client.clientProfitPct !== undefined && client.clientProfitPct !== null) ? client.clientProfitPct : 70;
+    const curOwner = client.ownerType || 'shared';
+    const curSplit = (client.splitAbuzarPct !== undefined && client.splitAbuzarPct !== null) ? client.splitAbuzarPct : 50;
     modal.innerHTML = `
       <h3>Edit ${client.name}</h3>
       <div class="field"><label>Full name</label><input id="m-name" value="${client.name}"></div>
       <div class="field"><label>Email</label><input id="m-email" value="${client.email}"></div>
       <div class="field"><label>Phone</label><input id="m-phone" value="${client.phone||''}"></div>
       <div class="field"><label>Client passcode</label><input id="m-pass" value="${client.passcode}"></div>
+      <div class="field"><label>Client's share of profit (%) <span class="badge-30">e.g. 70, or 100 for no fee</span></label><input id="m-clientpct" type="number" step="0.1" min="0" max="100" value="${curPct}"></div>
+      <div class="field"><label>Whose client is this?</label>
+        <select id="m-owner">
+          <option value="shared" ${curOwner==='shared'?'selected':''}>Shared (Abuzar + Azfar)</option>
+          <option value="abuzar" ${curOwner==='abuzar'?'selected':''}>Abuzar only</option>
+          <option value="azfar" ${curOwner==='azfar'?'selected':''}>Azfar only</option>
+        </select>
+      </div>
+      <div class="field" id="m-splitwrap"><label>Abuzar's share of the cut (%) <span class="badge-30">rest goes to Azfar</span></label><input id="m-split" type="number" step="0.1" min="0" max="100" value="${curSplit}"></div>
       <div class="modal-actions">
         <button class="btn btn-danger" id="m-delete" style="flex:1">Remove client</button>
         <button class="btn btn-primary" id="m-save" style="flex:1">Save</button>
       </div>
       <button class="btn btn-ghost" id="m-cancel" style="width:100%; margin-top:10px;">Cancel</button>
     `;
+    const ownerSel2 = modal.querySelector('#m-owner');
+    const splitWrap2 = modal.querySelector('#m-splitwrap');
+    const toggleSplit2 = ()=>{ splitWrap2.style.display = ownerSel2.value==='shared' ? 'block' : 'none'; };
+    ownerSel2.addEventListener('change', toggleSplit2);
+    toggleSplit2();
     modal.querySelector('#m-save').onclick = async ()=>{
+      const clientProfitPct = parseFloat(modal.querySelector('#m-clientpct').value);
+      const splitAbuzarPct = parseFloat(modal.querySelector('#m-split').value);
+      if(isNaN(clientProfitPct) || clientProfitPct < 0 || clientProfitPct > 100){
+        alert('Client profit share must be a number between 0 and 100.');
+        return;
+      }
       client.name = modal.querySelector('#m-name').value.trim();
       client.email = modal.querySelector('#m-email').value.trim();
       client.phone = modal.querySelector('#m-phone').value.trim();
       client.passcode = modal.querySelector('#m-pass').value.trim();
+      client.clientProfitPct = clientProfitPct;
+      client.ownerType = modal.querySelector('#m-owner').value;
+      client.splitAbuzarPct = isNaN(splitAbuzarPct) ? 50 : splitAbuzarPct;
       await sSet('clients', state.clients, true);
       state.modal = null;
       render();

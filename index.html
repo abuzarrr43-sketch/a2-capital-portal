@@ -3,828 +3,679 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Client Portal</title>
+<title>A2 Capital</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
-
   :root{
-    --bg:#0B0F14;
-    --panel:#11161D;
-    --panel-2:#161D26;
-    --border:#232C38;
-    --border-soft:#1A222C;
-    --text:#E7ECF2;
-    --text-dim:#8B97A8;
-    --text-faint:#5C6878;
-    --green:#1FD17C;
-    --green-dim:#163024;
-    --red:#FF6B6B;
-    --red-dim:#2E1818;
-    --accent:#3D8BFF;
-    --radius:10px;
+    --bg:#0B0F14; --panel:#11161D; --panel-2:#161D26; --border:#232C38; --border-soft:#1A222C;
+    --text:#E7ECF2; --text-dim:#8B97A8; --text-faint:#5C6878;
+    --green:#1FD17C; --green-dim:#163024; --red:#FF6B6B; --red-dim:#2E1818;
+    --amber:#F5A623; --amber-dim:#2E2010; --accent:#3D8BFF;
   }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  body{
-    background:var(--bg);
-    color:var(--text);
-    font-family:'Inter',sans-serif;
-    min-height:100vh;
-    line-height:1.5;
-  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;line-height:1.5;}
   .mono{font-family:'JetBrains Mono',monospace;}
-  ::-webkit-scrollbar{width:8px; height:8px;}
-  ::-webkit-scrollbar-thumb{background:var(--border); border-radius:4px;}
-
-  /* ---------- shared layout ---------- */
-  .app{max-width:1100px; margin:0 auto; padding:24px 20px 80px;}
-  .topbar{
-    display:flex; align-items:center; justify-content:space-between;
-    padding-bottom:20px; margin-bottom:24px; border-bottom:1px solid var(--border-soft);
-  }
-  .brand{display:flex; align-items:center; gap:10px;}
-  .brand-mark{
-    width:30px; height:30px; border-radius:7px;
-    background:linear-gradient(180deg, var(--green), #14A862);
-    display:flex; align-items:center; justify-content:center;
-    font-weight:700; font-size:11px; letter-spacing:-0.3px; color:#06140D;
-  }
-  .brand-name{font-weight:600; font-size:15px; letter-spacing:0.2px;}
-  .topbar-right{display:flex; align-items:center; gap:14px; font-size:13px; color:var(--text-dim);}
-  .btn{
-    background:var(--panel-2); border:1px solid var(--border); color:var(--text);
-    padding:9px 16px; border-radius:8px; font-size:13px; font-weight:500;
-    cursor:pointer; transition:border-color .15s ease, background .15s ease;
-    font-family:'Inter',sans-serif;
-  }
-  .btn:hover{border-color:#34404F; background:#1A222C;}
-  .btn-primary{background:var(--green); color:#06140D; border:1px solid var(--green);}
-  .btn-primary:hover{background:#28DB87; border-color:#28DB87;}
-  .btn-ghost{background:transparent; border:1px solid transparent; color:var(--text-dim);}
-  .btn-ghost:hover{color:var(--text); background:var(--panel-2);}
-  .btn-sm{padding:6px 12px; font-size:12px;}
-  .btn-danger{color:var(--red); border-color:#3A2222;}
-
-  input, select, textarea{
-    background:var(--panel-2); border:1px solid var(--border); color:var(--text);
-    padding:10px 12px; border-radius:8px; font-size:14px; font-family:'Inter',sans-serif;
-    width:100%; outline:none;
-  }
-  input:focus, select:focus, textarea:focus{border-color:var(--accent);}
-  label{font-size:12px; color:var(--text-dim); display:block; margin-bottom:6px; font-weight:500;}
+  ::-webkit-scrollbar{width:8px;height:8px;}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+  .app{max-width:1100px;margin:0 auto;padding:24px 20px 80px;}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding-bottom:20px;margin-bottom:24px;border-bottom:1px solid var(--border-soft);}
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand-mark{width:30px;height:30px;border-radius:7px;background:linear-gradient(180deg,var(--green),#14A862);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;letter-spacing:-0.3px;color:#06140D;}
+  .brand-name{font-weight:600;font-size:15px;}
+  .topbar-right{display:flex;align-items:center;gap:14px;font-size:13px;color:var(--text-dim);}
+  .btn{background:var(--panel-2);border:1px solid var(--border);color:var(--text);padding:9px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:border-color .15s,background .15s;}
+  .btn:hover{border-color:#34404F;background:#1A222C;}
+  .btn-primary{background:var(--green);color:#06140D;border-color:var(--green);}
+  .btn-primary:hover{background:#28DB87;border-color:#28DB87;}
+  .btn-ghost{background:transparent;border-color:transparent;color:var(--text-dim);}
+  .btn-ghost:hover{color:var(--text);background:var(--panel-2);}
+  .btn-sm{padding:6px 12px;font-size:12px;}
+  .btn-danger{color:var(--red);border-color:#3A2222;}
+  .btn-amber{background:var(--amber);color:#1A0E00;border-color:var(--amber);}
+  .btn-amber:hover{background:#F7B84A;}
+  input,select,textarea{background:var(--panel-2);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:8px;font-size:14px;font-family:'Inter',sans-serif;width:100%;outline:none;}
+  input:focus,select:focus,textarea:focus{border-color:var(--accent);}
+  label{font-size:12px;color:var(--text-dim);display:block;margin-bottom:6px;font-weight:500;}
   .field{margin-bottom:14px;}
-
-  /* ---------- login ---------- */
-  .login-wrap{
-    min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
-    padding:20px;
-  }
-  .login-card{
-    width:100%; max-width:380px; background:var(--panel); border:1px solid var(--border-soft);
-    border-radius:14px; padding:32px 28px;
-  }
-  .login-header{text-align:center; margin-bottom:28px;}
-  .login-header .brand-mark{margin:0 auto 14px; width:42px; height:42px; border-radius:10px; font-size:15px;}
-  .login-header h1{font-size:18px; font-weight:600; margin-bottom:4px;}
-  .login-header p{font-size:13px; color:var(--text-dim);}
-  .role-toggle{display:flex; gap:8px; margin-bottom:22px; background:var(--panel-2); padding:4px; border-radius:9px; border:1px solid var(--border);}
-  .role-toggle button{
-    flex:1; padding:8px; border-radius:6px; border:none; background:transparent; color:var(--text-dim);
-    font-size:13px; font-weight:500; cursor:pointer; font-family:'Inter',sans-serif;
-  }
-  .role-toggle button.active{background:var(--bg); color:var(--text); border:1px solid var(--border);}
-  .login-error{color:var(--red); font-size:12px; margin-top:10px; text-align:center;}
-  .login-note{font-size:11px; color:var(--text-faint); text-align:center; margin-top:18px; line-height:1.5;}
-
-  /* ---------- dashboard layout ---------- */
-  .layout{display:grid; grid-template-columns:260px 1fr; gap:20px; align-items:start;}
-  @media (max-width:760px){ .layout{grid-template-columns:1fr;} }
-
-  .sidebar{background:var(--panel); border:1px solid var(--border-soft); border-radius:12px; padding:14px; position:sticky; top:20px;}
-  .sidebar-title{font-size:11px; text-transform:uppercase; letter-spacing:0.6px; color:var(--text-faint); padding:6px 8px 10px; font-weight:600;}
-  .client-item{
-    display:flex; align-items:center; justify-content:space-between; gap:8px;
-    padding:10px 10px; border-radius:8px; cursor:pointer; margin-bottom:2px;
-    border:1px solid transparent;
-  }
+  .row{display:flex;gap:10px;}
+  .row>*{flex:1;}
+  .badge-30{font-size:11px;color:var(--text-faint);margin-left:6px;}
+  /* Login */
+  .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+  .login-card{width:100%;max-width:380px;background:var(--panel);border:1px solid var(--border-soft);border-radius:14px;padding:32px 28px;}
+  .login-header{text-align:center;margin-bottom:28px;}
+  .login-header .brand-mark{margin:0 auto 14px;width:42px;height:42px;border-radius:10px;font-size:15px;}
+  .login-header h1{font-size:18px;font-weight:600;margin-bottom:4px;}
+  .login-header p{font-size:13px;color:var(--text-dim);}
+  .role-toggle{display:flex;gap:8px;margin-bottom:22px;background:var(--panel-2);padding:4px;border-radius:9px;border:1px solid var(--border);}
+  .role-toggle button{flex:1;padding:8px;border-radius:6px;border:none;background:transparent;color:var(--text-dim);font-size:13px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;}
+  .role-toggle button.active{background:var(--bg);color:var(--text);border:1px solid var(--border);}
+  .login-error{color:var(--red);font-size:12px;margin-top:10px;text-align:center;}
+  .login-note{font-size:11px;color:var(--text-faint);text-align:center;margin-top:18px;line-height:1.5;}
+  /* Layout */
+  .layout{display:grid;grid-template-columns:265px 1fr;gap:20px;align-items:start;}
+  @media(max-width:760px){.layout{grid-template-columns:1fr;}}
+  .sidebar{background:var(--panel);border:1px solid var(--border-soft);border-radius:12px;padding:14px;position:sticky;top:20px;}
+  .sidebar-title{font-size:11px;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-faint);padding:6px 8px 10px;font-weight:600;}
+  .client-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px;border-radius:8px;cursor:pointer;margin-bottom:2px;border:1px solid transparent;}
   .client-item:hover{background:var(--panel-2);}
-  .client-item.active{background:var(--panel-2); border-color:var(--border);}
-  .client-item .nm{font-size:13.5px; font-weight:500;}
-  .client-item .bal{font-size:11.5px; color:var(--text-dim);}
-  .client-item .pct{font-size:11px; font-weight:600;}
-
-  .panel{background:var(--panel); border:1px solid var(--border-soft); border-radius:12px; padding:22px;}
-  .panel + .panel{margin-top:18px;}
-  .panel-title{font-size:13px; font-weight:600; margin-bottom:16px; display:flex; align-items:center; justify-content:space-between;}
-  .panel-title .sub{font-size:11px; color:var(--text-faint); font-weight:400;}
-
-  .stat-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(140px,1fr)); gap:12px; margin-bottom:18px;}
-  .stat-card{background:var(--panel-2); border:1px solid var(--border); border-radius:10px; padding:14px 16px;}
-  .stat-label{font-size:11px; color:var(--text-dim); margin-bottom:6px; font-weight:500;}
-  .stat-value{font-size:21px; font-weight:600;}
+  .client-item.active{background:var(--panel-2);border-color:var(--border);}
+  .client-item.inactive-client{opacity:0.5;}
+  .client-item .nm{font-size:13.5px;font-weight:500;}
+  .client-item .bal{font-size:11.5px;color:var(--text-dim);}
+  .badge{display:inline-block;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600;margin-left:4px;}
+  .badge-inactive{background:var(--red-dim);color:var(--red);}
+  .badge-req{background:var(--amber-dim);color:var(--amber);}
+  .panel{background:var(--panel);border:1px solid var(--border-soft);border-radius:12px;padding:22px;}
+  .panel+.panel{margin-top:18px;}
+  .panel-title{font-size:13px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;}
+  .panel-title .sub{font-size:11px;color:var(--text-faint);font-weight:400;}
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:18px;}
+  .stat-card{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+  .stat-label{font-size:11px;color:var(--text-dim);margin-bottom:6px;font-weight:500;}
+  .stat-value{font-size:21px;font-weight:600;}
   .stat-value.green{color:var(--green);}
-
-  table{width:100%; border-collapse:collapse; font-size:13px;}
-  th{text-align:left; color:var(--text-faint); font-weight:500; font-size:11px; text-transform:uppercase; letter-spacing:0.4px; padding:8px 10px; border-bottom:1px solid var(--border-soft);}
-  td{padding:11px 10px; border-bottom:1px solid var(--border-soft);}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th{text-align:left;color:var(--text-faint);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:0.4px;padding:8px 10px;border-bottom:1px solid var(--border-soft);}
+  td{padding:11px 10px;border-bottom:1px solid var(--border-soft);}
   tr:last-child td{border-bottom:none;}
-  .pill{display:inline-block; padding:3px 9px; border-radius:20px; font-size:12px; font-weight:600;}
-  .pill.up{background:var(--green-dim); color:var(--green);}
-  .pill.down{background:var(--red-dim); color:var(--red);}
-
-  .empty{text-align:center; padding:40px 20px; color:var(--text-faint); font-size:13px;}
-
-  .modal-bg{position:fixed; inset:0; background:rgba(0,0,0,0.55); display:flex; align-items:center; justify-content:center; z-index:50; padding:20px;}
-  .modal{background:var(--panel); border:1px solid var(--border-soft); border-radius:14px; padding:26px; width:100%; max-width:420px;}
-  .modal h3{font-size:15px; font-weight:600; margin-bottom:18px;}
-  .modal-actions{display:flex; gap:10px; margin-top:6px;}
-
-  .chat-box{display:flex; flex-direction:column; height:360px;}
-  .chat-msgs{flex:1; overflow-y:auto; padding-right:4px; display:flex; flex-direction:column; gap:10px;}
-  .msg{max-width:75%; padding:9px 13px; border-radius:12px; font-size:13.5px; line-height:1.45;}
+  .pill{display:inline-block;padding:3px 9px;border-radius:20px;font-size:12px;font-weight:600;}
+  .pill.up{background:var(--green-dim);color:var(--green);}
+  .pill.down{background:var(--red-dim);color:var(--red);}
+  .pill.pending{background:var(--amber-dim);color:var(--amber);}
+  .pill.approved{background:var(--green-dim);color:var(--green);}
+  .pill.rejected{background:var(--red-dim);color:var(--red);}
+  .empty{text-align:center;padding:36px 20px;color:var(--text-faint);font-size:13px;}
+  /* Modals */
+  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px;}
+  .modal{background:var(--panel);border:1px solid var(--border-soft);border-radius:14px;padding:26px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto;}
+  .modal h3{font-size:15px;font-weight:600;margin-bottom:18px;}
+  .modal-actions{display:flex;gap:10px;margin-top:6px;}
+  /* Chat */
+  .chat-box{display:flex;flex-direction:column;height:380px;}
+  .chat-msgs{flex:1;overflow-y:auto;padding-right:4px;display:flex;flex-direction:column;gap:10px;}
   .msg-row{display:flex;}
   .msg-row.mine{justify-content:flex-end;}
-  .msg.mine{background:var(--green-dim); color:#CFFCE6; border-bottom-right-radius:3px;}
-  .msg.theirs{background:var(--panel-2); border:1px solid var(--border); border-bottom-left-radius:3px;}
-  .msg-time{font-size:10px; color:var(--text-faint); margin-top:4px;}
-  .chat-input-row{display:flex; gap:8px; margin-top:12px;}
-
-  .row{display:flex; gap:10px;}
-  .row > *{flex:1;}
-
-  .badge-30{font-size:11px; color:var(--text-faint); margin-left:8px;}
+  .msg{max-width:78%;padding:9px 13px;border-radius:12px;font-size:13.5px;line-height:1.45;}
+  .msg.mine{background:var(--green-dim);color:#CFFCE6;border-bottom-right-radius:3px;}
+  .msg.theirs{background:var(--panel-2);border:1px solid var(--border);border-bottom-left-radius:3px;}
+  .msg-time{font-size:10px;color:var(--text-faint);margin-top:4px;}
+  .chat-input-row{display:flex;gap:8px;margin-top:12px;}
+  .req-btns{display:flex;gap:8px;margin-bottom:14px;}
+  /* Ticket */
+  .ticket{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;max-width:280px;}
+  .ticket-header{font-size:11px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:6px;}
+  .ticket-amount{font-size:18px;font-weight:700;font-family:'JetBrains Mono',monospace;margin-bottom:6px;}
+  .ticket-amount.deposit{color:var(--green);}
+  .ticket-amount.withdrawal{color:var(--amber);}
+  .ticket-actions{display:flex;gap:6px;margin-top:10px;}
+  .txn-dep td{background:rgba(31,209,124,.03);}
+  .txn-wd td{background:rgba(255,107,107,.03);}
 </style>
 </head>
 <body>
-
 <div id="root"></div>
-
 <script>
-/* ============================== STORAGE HELPERS ============================== */
-/* ============================== SUPABASE STORAGE ============================== */
-const SUPABASE_URL = 'https://sdqxwbyekidctoumosgk.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNkcXh3Ynlla2lkY3RvdW1vc2drIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MTYzOTIsImV4cCI6MjA5ODM5MjM5Mn0.OwO8v7GsO2qj7OIP10MU07B-2caT610zYfASCfJGp8Y';
+const SUPABASE_URL='https://sdqxwbyekidctoumosgk.supabase.co';
+const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNkcXh3Ynlla2lkY3RvdW1vc2drIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MTYzOTIsImV4cCI6MjA5ODM5MjM5Mn0.OwO8v7GsO2qj7OIP10MU07B-2caT610zYfASCfJGp8Y';
 
 async function sGet(key){
   try{
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/portal_data?key=eq.${encodeURIComponent(key)}&select=value`, {
-      headers: {
-        'apikey': SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-      }
-    });
-    const rows = await res.json();
-    return (rows && rows.length) ? rows[0].value : null;
-  }catch(e){ console.error('storage get failed', e); return null; }
+    const res=await fetch(`${SUPABASE_URL}/rest/v1/portal_data?key=eq.${encodeURIComponent(key)}&select=value`,
+      {headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY}});
+    const rows=await res.json();
+    return(rows&&rows.length)?rows[0].value:null;
+  }catch(e){console.error('storage get failed',e);return null;}
 }
-async function sSet(key, value){
+async function sSet(key,value){
   try{
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/portal_data`, {
-      method: 'POST',
-      headers: {
-        'apikey': SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'resolution=merge-duplicates'
-      },
-      body: JSON.stringify([{ key, value }])
+    const res=await fetch(`${SUPABASE_URL}/rest/v1/portal_data`,{
+      method:'POST',
+      headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'},
+      body:JSON.stringify([{key,value}])
     });
     return res.ok;
-  }catch(e){ console.error('storage set failed', e); return false; }
+  }catch(e){console.error('storage set failed',e);return false;}
 }
-function uid(){ return Math.random().toString(36).slice(2,10) + Date.now().toString(36); }
+function uid(){return Math.random().toString(36).slice(2,10)+Date.now().toString(36);}
 
-/* ============================== APP STATE ============================== */
-let state = {
-  view: 'login',        // login | admin | client
-  loginRole: 'admin',    // admin | client
-  loginError: '',
-  adminConfigured: null, // {passcode}
-  clients: [],
-  currentClientId: null, // for admin viewing a client
-  loggedClient: null,    // for client session
-  records: {},           // clientId -> array
-  chats: {},             // clientId -> array
-  modal: null,           // 'addClient' | 'editClient'
+let state={
+  view:'login',loginRole:'admin',loginError:'',
+  adminConfigured:null,clients:[],currentClientId:null,loggedClient:null,
+  records:{},chats:{},transactions:{},modal:null
 };
+function render(){window.__render();}
 
-function render(){ window.__render(); }
+async function loadAdminConfig(){state.adminConfigured=await sGet('admin-config');}
+async function loadClients(){state.clients=(await sGet('clients'))||[];}
+async function loadRecords(id){state.records[id]=(await sGet('records:'+id))||[];}
+async function loadChat(id){state.chats[id]=(await sGet('chat:'+id))||[];}
+async function loadTransactions(id){state.transactions[id]=(await sGet('transactions:'+id))||[];}
 
-/* ============================== DATA LOADERS ============================== */
-async function loadAdminConfig(){
-  state.adminConfigured = await sGet('admin-config', true);
-}
-async function loadClients(){
-  state.clients = (await sGet('clients', true)) || [];
-}
-async function loadRecords(clientId){
-  state.records[clientId] = (await sGet('records:'+clientId, true)) || [];
-}
-async function loadChat(clientId){
-  state.chats[clientId] = (await sGet('chat:'+clientId, true)) || [];
-}
-
-/* ============================== CALCULATIONS ============================== */
 function computeLedger(client){
-  const recs = (state.records[client.id] || []).slice().sort((a,b)=> a.year-b.year || a.monthNum-b.monthNum);
+  const cPct=(client.clientProfitPct!=null)?client.clientProfitPct:70;
+  const own=client.ownerType||'shared';
+  const aSplit=(client.splitAbuzarPct!=null)?client.splitAbuzarPct:50;
 
-  // Per-client settings, with safe fallbacks for older client records
-  const clientPct = (client.clientProfitPct !== undefined && client.clientProfitPct !== null) ? client.clientProfitPct : 70;
-  const ownerType = client.ownerType || 'shared'; // 'abuzar' | 'azfar' | 'shared'
-  const abuzarSplitOfCut = (client.splitAbuzarPct !== undefined && client.splitAbuzarPct !== null) ? client.splitAbuzarPct : 50;
+  const profitRecs=(state.records[client.id]||[])
+    .map(r=>({...r,_ev:'profit'}))
+    .sort((a,b)=>a.year-b.year||a.monthNum-b.monthNum||(a.week||0)-(b.week||0)||(a.addedAt||0)-(b.addedAt||0));
 
-  let balance = client.initialDeposit;
-  let abuzarPool = 0;
-  let azfarPool = 0;
-  let totalClientProfit = 0;
+  const approvedTxns=(state.transactions[client.id]||[])
+    .filter(t=>t.status==='approved')
+    .map(t=>({...t,_ev:'txn'}));
 
-  const ledger = recs.map(r=>{
-    const before = balance;
-    const abuzarBefore = abuzarPool;
-    const azfarBefore = azfarPool;
-    const rate = r.pct/100;
+  const all=[...profitRecs,...approvedTxns].sort((a,b)=>{
+    const at=a._ev==='profit'?(a.addedAt||0):(a.processedAt||0);
+    const bt=b._ev==='profit'?(b.addedAt||0):(b.processedAt||0);
+    return at-bt;
+  });
 
-    const grossGain = before * rate;
-    const clientGain = grossGain * (clientPct/100);
-    const adminGain = grossGain - clientGain; // total cut, before splitting between partners
+  let bal=client.initialDeposit,abPool=0,azPool=0,totalCProfit=0;
+  const ledger=[];
 
-    let abuzarShare = 0, azfarShare = 0;
-    if(ownerType === 'abuzar'){ abuzarShare = adminGain; }
-    else if(ownerType === 'azfar'){ azfarShare = adminGain; }
-    else { // shared
-      abuzarShare = adminGain * (abuzarSplitOfCut/100);
-      azfarShare = adminGain * (1 - abuzarSplitOfCut/100);
+  all.forEach(ev=>{
+    if(ev._ev==='profit'){
+      const before=bal,abBefore=abPool,azBefore=azPool,rate=ev.pct/100;
+      const gross=before*rate,cGain=gross*(cPct/100),admin=gross-cGain;
+      let abShare=0,azShare=0;
+      if(own==='abuzar')abShare=admin;
+      else if(own==='azfar')azShare=admin;
+      else{abShare=admin*(aSplit/100);azShare=admin*(1-aSplit/100);}
+      bal=before+cGain;
+      abPool=abBefore*(1+rate)+abShare;
+      azPool=azBefore*(1+rate)+azShare;
+      totalCProfit+=cGain;
+      ledger.push({_ev:'profit',...ev,before,gross,cGain,after:bal,abBefore,abShare,abAfter:abPool,azBefore,azShare,azAfter:azPool});
+    } else {
+      const before=bal;
+      if(ev.type==='deposit')bal+=ev.amount;
+      else if(ev.type==='withdrawal')bal=Math.max(0,bal-ev.amount);
+      ledger.push({_ev:'txn',...ev,before,after:bal});
     }
-
-    balance = before + clientGain;
-    abuzarPool = abuzarBefore * (1+rate) + abuzarShare;
-    azfarPool = azfarBefore * (1+rate) + azfarShare;
-
-    totalClientProfit += clientGain;
-
-    return {
-      ...r, before, grossGain, clientGain, after: balance,
-      abuzarBefore, abuzarShare, abuzarAfter: abuzarPool,
-      azfarBefore, azfarShare, azfarAfter: azfarPool
-    };
   });
-  return { ledger, currentBalance: balance, totalClientProfit, abuzarPool, azfarPool, totalAdminCut: abuzarPool + azfarPool, clientPct, ownerType, abuzarSplitOfCut };
+  return{ledger,currentBalance:bal,totalCProfit,abPool,azPool,cPct,own,aSplit};
 }
 
-function fmtMoney(n){
-  return '$' + n.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
-}
-function fmtPct(n){
-  const s = n.toFixed(2);
-  return (n>=0?'+':'') + s + '%';
-}
-function monthName(m){
-  return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m-1];
-}
+function fmtM(n){'use strict';return'$'+Number(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});}
+function fmtP(n){return(n>=0?'+':'')+Number(n).toFixed(2)+'%';}
+function mName(m){return['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m-1];}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 
-/* ============================== RENDER: LOGIN ============================== */
+/* ===== LOGIN ===== */
 function ViewLogin(){
-  const setRole = (r)=>{ state.loginRole = r; state.loginError=''; render(); };
-
-  const html = document.createElement('div');
-  html.className = 'login-wrap';
-  html.innerHTML = `
-    <div class="login-card">
-      <div class="login-header">
-        <div class="brand-mark">A2</div>
-        <h1>A2 Capital</h1>
-        <p>Track your account, month by month</p>
-      </div>
-      <div class="role-toggle">
-        <button data-role="admin" class="${state.loginRole==='admin'?'active':''}">Admin</button>
-        <button data-role="client" class="${state.loginRole==='client'?'active':''}">Client</button>
-      </div>
-      <div id="login-fields"></div>
-      <div class="login-error">${state.loginError || ''}</div>
-      <div class="login-note">Your data is stored for this portal only. Keep your passcode private.</div>
+  const wrap=document.createElement('div');wrap.className='login-wrap';
+  wrap.innerHTML=`<div class="login-card">
+    <div class="login-header">
+      <div class="brand-mark">A2</div>
+      <h1>A2 Capital</h1>
+      <p>Track your account, week by week</p>
     </div>
-  `;
-  html.querySelectorAll('[data-role]').forEach(b=>{
-    b.onclick = ()=> setRole(b.dataset.role);
-  });
+    <div class="role-toggle">
+      <button data-role="admin" class="${state.loginRole==='admin'?'active':''}">Admin</button>
+      <button data-role="client" class="${state.loginRole==='client'?'active':''}">Client</button>
+    </div>
+    <div id="lf"></div>
+    <div class="login-error">${state.loginError||''}</div>
+    <div class="login-note">Your data is stored securely. Keep your passcode private.</div>
+  </div>`;
+  wrap.querySelectorAll('[data-role]').forEach(b=>{b.onclick=()=>{state.loginRole=b.dataset.role;state.loginError='';render();};});
+  const lf=wrap.querySelector('#lf');
 
-  const fieldsHost = html.querySelector('#login-fields');
-
-  if(state.loginRole === 'admin'){
+  if(state.loginRole==='admin'){
     if(!state.adminConfigured){
-      fieldsHost.innerHTML = `
-        <div class="field"><label>Set an admin passcode</label><input id="np1" type="password" placeholder="Choose a passcode"></div>
-        <div class="field"><label>Confirm passcode</label><input id="np2" type="password" placeholder="Re-enter passcode"></div>
-        <button class="btn btn-primary" id="setup-btn" style="width:100%">Create admin account</button>
-      `;
-      fieldsHost.querySelector('#setup-btn').onclick = async ()=>{
-        const p1 = fieldsHost.querySelector('#np1').value.trim();
-        const p2 = fieldsHost.querySelector('#np2').value.trim();
-        if(!p1 || p1.length<4){ state.loginError='Passcode must be at least 4 characters.'; render(); return; }
-        if(p1!==p2){ state.loginError='Passcodes do not match.'; render(); return; }
-        await sSet('admin-config', {passcode:p1}, true);
-        state.adminConfigured = {passcode:p1};
-        state.loginError='';
-        render();
+      lf.innerHTML=`
+        <div class="field"><label>Set admin passcode</label><input id="p1" type="password" placeholder="Choose a passcode"></div>
+        <div class="field"><label>Confirm passcode</label><input id="p2" type="password" placeholder="Re-enter passcode"></div>
+        <button class="btn btn-primary" id="sb" style="width:100%">Create admin account</button>`;
+      lf.querySelector('#sb').onclick=async()=>{
+        const p1=lf.querySelector('#p1').value.trim(),p2=lf.querySelector('#p2').value.trim();
+        if(!p1||p1.length<4){state.loginError='Passcode must be at least 4 characters.';render();return;}
+        if(p1!==p2){state.loginError='Passcodes do not match.';render();return;}
+        await sSet('admin-config',{passcode:p1});
+        state.adminConfigured={passcode:p1};state.loginError='';render();
       };
     } else {
-      fieldsHost.innerHTML = `
-        <div class="field"><label>Passcode</label><input id="ap" type="password" placeholder="Enter admin passcode"></div>
-        <button class="btn btn-primary" id="login-btn" style="width:100%">Log in</button>
-      `;
-      const tryLogin = async ()=>{
-        const p = fieldsHost.querySelector('#ap').value.trim();
-        if(p === state.adminConfigured.passcode){
-          state.view='admin'; state.loginError='';
+      lf.innerHTML=`
+        <div class="field"><label>Passcode</label><input id="ap" type="password" placeholder="Enter passcode"></div>
+        <button class="btn btn-primary" id="lb" style="width:100%">Log in</button>`;
+      const go=async()=>{
+        if(lf.querySelector('#ap').value.trim()===state.adminConfigured.passcode){
+          state.view='admin';state.loginError='';
           await loadClients();
+          await Promise.all(state.clients.map(c=>Promise.all([loadRecords(c.id),loadChat(c.id),loadTransactions(c.id)])));
           render();
-        } else {
-          state.loginError='Incorrect passcode.'; render();
-        }
+        } else {state.loginError='Incorrect passcode.';render();}
       };
-      fieldsHost.querySelector('#login-btn').onclick = tryLogin;
-      fieldsHost.querySelector('#ap').addEventListener('keydown', e=>{ if(e.key==='Enter') tryLogin(); });
+      lf.querySelector('#lb').onclick=go;
+      lf.querySelector('#ap').addEventListener('keydown',e=>{if(e.key==='Enter')go();});
     }
   } else {
-    fieldsHost.innerHTML = `
+    lf.innerHTML=`
       <div class="field"><label>Email</label><input id="ce" type="email" placeholder="name@email.com"></div>
-      <div class="field"><label>Passcode</label><input id="cp" type="password" placeholder="Passcode given by your advisor"></div>
-      <button class="btn btn-primary" id="cli-login-btn" style="width:100%">Log in</button>
-    `;
-    const tryLogin = async ()=>{
-      const email = fieldsHost.querySelector('#ce').value.trim().toLowerCase();
-      const pass = fieldsHost.querySelector('#cp').value.trim();
+      <div class="field"><label>Passcode</label><input id="cp" type="password" placeholder="Passcode from your advisor"></div>
+      <button class="btn btn-primary" id="clb" style="width:100%">Log in</button>`;
+    const go=async()=>{
+      const em=lf.querySelector('#ce').value.trim().toLowerCase(),pw=lf.querySelector('#cp').value.trim();
       await loadClients();
-      const match = state.clients.find(c=> c.email.toLowerCase()===email && c.passcode===pass);
-      if(match){
-        state.loggedClient = match;
-        state.view='client';
-        state.loginError='';
-        await loadRecords(match.id);
-        await loadChat(match.id);
-        render();
-      } else {
-        state.loginError='No match found. Check your email and passcode.'; render();
-      }
+      const m=state.clients.find(c=>c.email.toLowerCase()===em&&c.passcode===pw);
+      if(m){
+        state.loggedClient=m;state.view='client';state.loginError='';
+        await loadRecords(m.id);await loadChat(m.id);await loadTransactions(m.id);render();
+      } else {state.loginError='No match. Check your email and passcode.';render();}
     };
-    fieldsHost.querySelector('#cli-login-btn').onclick = tryLogin;
-    fieldsHost.querySelector('#cp').addEventListener('keydown', e=>{ if(e.key==='Enter') tryLogin(); });
+    lf.querySelector('#clb').onclick=go;
+    lf.querySelector('#cp').addEventListener('keydown',e=>{if(e.key==='Enter')go();});
   }
-
-  return html;
+  return wrap;
 }
 
-/* ============================== RENDER: ADMIN ============================== */
+/* ===== ADMIN ===== */
 function ViewAdmin(){
-  const wrap = document.createElement('div');
-  wrap.className = 'app';
-
-  // topbar
-  const top = document.createElement('div');
-  top.className = 'topbar';
-  top.innerHTML = `
-    <div class="brand"><div class="brand-mark">A2</div><div class="brand-name">A2 Capital — admin desk</div></div>
-    <div class="topbar-right">
-      <span>Admin</span>
-      <button class="btn btn-ghost btn-sm" id="logout-btn">Log out</button>
-    </div>
-  `;
-  top.querySelector('#logout-btn').onclick = ()=>{ state.view='login'; state.currentClientId=null; render(); };
+  const wrap=document.createElement('div');wrap.className='app';
+  const top=document.createElement('div');top.className='topbar';
+  top.innerHTML=`
+    <div class="brand"><div class="brand-mark">A2</div><div class="brand-name">A2 Capital \u2014 Admin</div></div>
+    <div class="topbar-right"><span>Admin</span><button class="btn btn-ghost btn-sm" id="lo">Log out</button></div>`;
+  top.querySelector('#lo').onclick=()=>{state.view='login';state.currentClientId=null;render();};
   wrap.appendChild(top);
 
-  const layout = document.createElement('div');
-  layout.className = 'layout';
+  const layout=document.createElement('div');layout.className='layout';
+  const sidebar=document.createElement('div');sidebar.className='sidebar';
 
-  // ---- sidebar ----
-  const sidebar = document.createElement('div');
-  sidebar.className = 'sidebar';
-  let sidebarHtml = `<div class="sidebar-title">Clients (${state.clients.length})</div>`;
-  if(state.clients.length===0){
-    sidebarHtml += `<div class="empty" style="padding:24px 8px;">No clients yet.</div>`;
-  } else {
+  let sh=`<div class="sidebar-title">Clients (${state.clients.length})</div>`;
+  if(!state.clients.length){sh+=`<div class="empty" style="padding:20px 8px;">No clients yet.</div>`;}
+  else{
     state.clients.forEach(c=>{
-      const recs = state.records[c.id];
-      let balText = fmtMoney(c.initialDeposit);
-      let pctText = '';
-      if(recs){
-        const calc = computeLedger(c);
-        balText = fmtMoney(calc.currentBalance);
-        if(calc.ledger.length){
-          const last = calc.ledger[calc.ledger.length-1];
-          pctText = `<span class="pct" style="color:${last.pct>=0?'var(--green)':'var(--red)'}">${fmtPct(last.pct)}</span>`;
-        }
-      }
-      const ow = c.ownerType || 'shared';
-      const owTag = ow==='abuzar' ? 'Abuzar' : ow==='azfar' ? 'Azfar' : 'Shared';
-      sidebarHtml += `
-        <div class="client-item ${state.currentClientId===c.id?'active':''}" data-id="${c.id}">
-          <div>
-            <div class="nm">${c.name} <span style="font-size:10px; color:var(--text-faint); font-weight:400;">· ${owTag}</span></div>
-            <div class="bal mono">${balText}</div>
-          </div>
-          ${pctText}
-        </div>
-      `;
+      const calc=state.records[c.id]?computeLedger(c):null;
+      const bal=calc?calc.currentBalance:c.initialDeposit;
+      const inactive=calc&&calc.currentBalance<=0;
+      const ow=c.ownerType||'shared';
+      const owT=ow==='abuzar'?'Abuzar':ow==='azfar'?'Azfar':'Shared';
+      const pending=(state.transactions[c.id]||[]).filter(t=>t.status==='pending').length;
+      const profitEvs=calc?calc.ledger.filter(r=>r._ev==='profit'):[];
+      const lastPctStr=profitEvs.length?`<span style="font-size:11px;font-weight:600;color:${profitEvs[profitEvs.length-1].pct>=0?'var(--green)':'var(--red)'}">${fmtP(profitEvs[profitEvs.length-1].pct)}</span>`:'';
+      sh+=`<div class="client-item ${state.currentClientId===c.id?'active':''} ${inactive?'inactive-client':''}" data-id="${c.id}">
+        <div style="flex:1;min-width:0;">
+          <div class="nm">${esc(c.name)}${inactive?'<span class="badge badge-inactive">INACTIVE</span>':''}${pending?`<span class="badge badge-req">${pending} REQ</span>`:''}</div>
+          <div class="bal mono">${fmtM(bal)} <span style="font-size:10px;color:var(--text-faint);">\u00b7 ${owT}</span></div>
+        </div>${lastPctStr}</div>`;
     });
   }
-  sidebar.innerHTML = sidebarHtml;
-  sidebar.innerHTML += `<button class="btn btn-primary btn-sm" id="add-client-btn" style="width:100%; margin-top:10px;">+ Add client</button>`;
+  sidebar.innerHTML=sh;
+  sidebar.innerHTML+=`<button class="btn btn-primary btn-sm" id="acb" style="width:100%;margin-top:10px;">+ Add client</button>`;
   layout.appendChild(sidebar);
 
-  // ---- main content ----
-  const main = document.createElement('div');
+  const main=document.createElement('div');
+  const allC=state.clients.map(c=>state.records[c.id]?computeLedger(c):null);
+  const totalAUM=state.clients.reduce((s,c,i)=>s+(allC[i]?allC[i].currentBalance:c.initialDeposit),0);
+  const totalAb=allC.reduce((s,c)=>s+(c?c.abPool:0),0);
+  const totalAz=allC.reduce((s,c)=>s+(c?c.azPool:0),0);
+  const totalCP=allC.reduce((s,c)=>s+(c?c.totalCProfit:0),0);
+  const activeCount=state.clients.filter(c=>{const cl=state.records[c.id]?computeLedger(c):null;return!cl||cl.currentBalance>0;}).length;
 
-  // overview stats (always visible at top)
-  const allCalcs = state.clients.map(c=> state.records[c.id] ? computeLedger(c) : null);
-  const totalAUM = state.clients.reduce((sum,c,i)=> sum + (allCalcs[i] ? allCalcs[i].currentBalance : c.initialDeposit), 0);
-  const totalAbuzarPool = allCalcs.reduce((sum,calc)=> sum + (calc? calc.abuzarPool : 0), 0);
-  const totalAzfarPool = allCalcs.reduce((sum,calc)=> sum + (calc? calc.azfarPool : 0), 0);
-  const totalClientProfit = allCalcs.reduce((sum,calc)=> sum + (calc? calc.totalClientProfit : 0), 0);
-
-  const overview = document.createElement('div');
-  overview.className = 'panel';
-  overview.innerHTML = `
-    <div class="panel-title">Overview</div>
-    <div class="stat-grid">
-      <div class="stat-card"><div class="stat-label">Assets under management</div><div class="stat-value mono">${fmtMoney(totalAUM)}</div></div>
-      <div class="stat-card"><div class="stat-label">Client profit distributed</div><div class="stat-value green mono">${fmtMoney(totalClientProfit)}</div></div>
-      <div class="stat-card"><div class="stat-label">Abuzar's pool (15%, compounding)</div><div class="stat-value green mono">${fmtMoney(totalAbuzarPool)}</div></div>
-      <div class="stat-card"><div class="stat-label">Azfar's pool (15%, compounding)</div><div class="stat-value green mono">${fmtMoney(totalAzfarPool)}</div></div>
-      <div class="stat-card"><div class="stat-label">Active clients</div><div class="stat-value">${state.clients.length}</div></div>
-    </div>
-  `;
-  main.appendChild(overview);
+  const ov=document.createElement('div');ov.className='panel';
+  ov.innerHTML=`<div class="panel-title">Overview</div><div class="stat-grid">
+    <div class="stat-card"><div class="stat-label">Assets under management</div><div class="stat-value mono">${fmtM(totalAUM)}</div></div>
+    <div class="stat-card"><div class="stat-label">Client profit distributed</div><div class="stat-value green mono">${fmtM(totalCP)}</div></div>
+    <div class="stat-card"><div class="stat-label">Abuzar's pool</div><div class="stat-value green mono">${fmtM(totalAb)}</div></div>
+    <div class="stat-card"><div class="stat-label">Azfar's pool</div><div class="stat-value green mono">${fmtM(totalAz)}</div></div>
+    <div class="stat-card"><div class="stat-label">Active clients</div><div class="stat-value">${activeCount}</div></div>
+  </div>`;
+  main.appendChild(ov);
 
   if(state.currentClientId){
-    const client = state.clients.find(c=>c.id===state.currentClientId);
-    if(client){
-      main.appendChild(ClientDetailPanel(client, true));
-    }
+    const cl=state.clients.find(c=>c.id===state.currentClientId);
+    if(cl)main.appendChild(ClientDetailPanel(cl,true));
   } else {
-    const hint = document.createElement('div');
-    hint.className = 'panel';
-    hint.innerHTML = `<div class="empty">Select a client from the left to enter their monthly result, view their ledger, or chat with them.</div>`;
+    const hint=document.createElement('div');hint.className='panel';
+    hint.innerHTML=`<div class="empty">Select a client from the left to view their account.</div>`;
     main.appendChild(hint);
   }
-
   layout.appendChild(main);
   wrap.appendChild(layout);
 
   sidebar.querySelectorAll('.client-item').forEach(el=>{
-    el.onclick = async ()=>{
-      const id = el.dataset.id;
-      state.currentClientId = id;
-      await loadRecords(id);
-      await loadChat(id);
-      render();
+    el.onclick=async()=>{
+      const id=el.dataset.id;state.currentClientId=id;
+      await loadRecords(id);await loadChat(id);await loadTransactions(id);render();
     };
   });
-  sidebar.querySelector('#add-client-btn').onclick = ()=>{ state.modal='addClient'; render(); };
-
+  sidebar.querySelector('#acb').onclick=()=>{state.modal='addClient';render();};
   return wrap;
 }
 
-/* ---- client detail panel (used in admin view) ---- */
-function ClientDetailPanel(client, isAdmin){
-  const calc = computeLedger(client);
-  const host = document.createElement('div');
+/* ===== CLIENT DETAIL PANEL ===== */
+function ClientDetailPanel(client,isAdmin){
+  const calc=computeLedger(client);
+  const host=document.createElement('div');
 
-  const info = document.createElement('div');
-  info.className = 'panel';
-  const ownerLabel = calc.ownerType==='abuzar' ? 'Abuzar only' : calc.ownerType==='azfar' ? 'Azfar only' : 'Shared';
-  const splitNote = calc.ownerType==='shared' ? ` (Abuzar ${calc.abuzarSplitOfCut}% / Azfar ${100-calc.abuzarSplitOfCut}% of the cut)` : '';
-  info.innerHTML = `
+  /* Stats */
+  const info=document.createElement('div');info.className='panel';
+  const owL=calc.own==='abuzar'?'Abuzar only':calc.own==='azfar'?'Azfar only':'Shared';
+  const spN=calc.own==='shared'?` (Abuzar ${calc.aSplit}% / Azfar ${100-calc.aSplit}% of cut)`:'';
+  info.innerHTML=`
     <div class="panel-title">
-      <span>${client.name} <span class="sub">${client.email} · joined ${client.joinDate}</span></span>
-      ${isAdmin ? '<button class="btn btn-ghost btn-sm" id="edit-client-btn">Edit</button>' : ''}
+      <span>${esc(client.name)} <span class="sub">${esc(client.email)} \u00b7 joined ${client.joinDate}</span></span>
+      ${isAdmin?'<button class="btn btn-ghost btn-sm" id="ecb">Edit</button>':''}
     </div>
-    ${isAdmin ? `<div class="sub" style="margin-bottom:14px;">Client keeps ${calc.clientPct}% of profit · Owner: ${ownerLabel}${splitNote}</div>` : ''}
+    ${isAdmin?`<div style="font-size:12px;color:var(--text-faint);margin-bottom:14px;">Client keeps ${calc.cPct}% \u00b7 ${owL}${spN}</div>`:''}
     <div class="stat-grid">
-      <div class="stat-card"><div class="stat-label">Current balance</div><div class="stat-value mono">${fmtMoney(calc.currentBalance)}</div></div>
-      <div class="stat-card"><div class="stat-label">Initial deposit</div><div class="stat-value mono">${fmtMoney(client.initialDeposit)}</div></div>
-      <div class="stat-card"><div class="stat-label">Total profit earned</div><div class="stat-value green mono">${fmtMoney(calc.totalClientProfit)}</div></div>
-      ${isAdmin && calc.ownerType!=='azfar' ? `
-      <div class="stat-card"><div class="stat-label">Abuzar's pool from this client</div><div class="stat-value green mono">${fmtMoney(calc.abuzarPool)}</div></div>
-      ` : ''}
-      ${isAdmin && calc.ownerType!=='abuzar' ? `
-      <div class="stat-card"><div class="stat-label">Azfar's pool from this client</div><div class="stat-value green mono">${fmtMoney(calc.azfarPool)}</div></div>
-      ` : ''}
-    </div>
-  `;
+      <div class="stat-card"><div class="stat-label">Current balance</div><div class="stat-value mono">${fmtM(calc.currentBalance)}</div></div>
+      <div class="stat-card"><div class="stat-label">Initial deposit</div><div class="stat-value mono">${fmtM(client.initialDeposit)}</div></div>
+      <div class="stat-card"><div class="stat-label">Total profit earned</div><div class="stat-value green mono">${fmtM(calc.totalCProfit)}</div></div>
+      ${isAdmin&&calc.own!=='azfar'?`<div class="stat-card"><div class="stat-label">Abuzar's pool</div><div class="stat-value green mono">${fmtM(calc.abPool)}</div></div>`:''}
+      ${isAdmin&&calc.own!=='abuzar'?`<div class="stat-card"><div class="stat-label">Azfar's pool</div><div class="stat-value green mono">${fmtM(calc.azPool)}</div></div>`:''}
+    </div>`;
   host.appendChild(info);
+  if(isAdmin){info.querySelector('#ecb')?.addEventListener('click',()=>{state.modal='editClient';render();});}
 
+  /* Add weekly result (admin) */
   if(isAdmin){
-    const addRecord = document.createElement('div');
-    addRecord.className = 'panel';
-    const now = new Date();
-    addRecord.innerHTML = `
-      <div class="panel-title">Add monthly result <span class="sub">gross %, before this client's ${calc.clientPct}/${100-calc.clientPct} split</span></div>
+    const ar=document.createElement('div');ar.className='panel';
+    const now=new Date();
+    ar.innerHTML=`<div class="panel-title">Add weekly result <span class="sub">gross %, before the ${calc.cPct}/${100-calc.cPct} split</span></div>
       <div class="row">
-        <div class="field">
-          <label>Month</label>
-          <select id="rec-month">
-            ${Array.from({length:12}).map((_,i)=>`<option value="${i+1}" ${i+1===now.getMonth()+1?'selected':''}>${monthName(i+1)}</option>`).join('')}
-          </select>
+        <div class="field"><label>Week</label>
+          <select id="rw"><option value="1">Week 1</option><option value="2">Week 2</option><option value="3">Week 3</option><option value="4">Week 4</option><option value="5">Week 5</option></select>
         </div>
-        <div class="field">
-          <label>Year</label>
-          <input id="rec-year" type="number" value="${now.getFullYear()}">
+        <div class="field"><label>Month (reference)</label>
+          <select id="rm">${Array.from({length:12}).map((_,i)=>`<option value="${i+1}" ${i+1===now.getMonth()+1?'selected':''}>${mName(i+1)}</option>`).join('')}</select>
         </div>
-        <div class="field">
-          <label>Gross % return</label>
-          <input id="rec-pct" type="number" step="0.01" placeholder="e.g. 18.5">
-        </div>
+        <div class="field"><label>Year</label><input id="ry" type="number" value="${now.getFullYear()}"></div>
+        <div class="field"><label>Gross %</label><input id="rp" type="number" step="0.01" placeholder="e.g. 4.5"></div>
       </div>
-      <button class="btn btn-primary" id="save-record-btn">Save month</button>
-    `;
-    host.appendChild(addRecord);
-    addRecord.querySelector('#save-record-btn').onclick = async ()=>{
-      const monthNum = parseInt(addRecord.querySelector('#rec-month').value);
-      const year = parseInt(addRecord.querySelector('#rec-year').value);
-      const pct = parseFloat(addRecord.querySelector('#rec-pct').value);
-      if(isNaN(pct)){ alert('Enter a valid percentage.'); return; }
-      if(pct < 0){ alert('Negative months are not supported in this version. If this happens, let me know and I will add it.'); return; }
-      const existing = state.records[client.id] || [];
-      if(existing.find(r=>r.monthNum===monthNum && r.year===year)){
-        if(!confirm('A record for this month already exists. Replace it?')) return;
+      <button class="btn btn-primary" id="srb">Save week</button>`;
+    ar.querySelector('#srb').onclick=async()=>{
+      const week=parseInt(ar.querySelector('#rw').value);
+      const monthNum=parseInt(ar.querySelector('#rm').value);
+      const year=parseInt(ar.querySelector('#ry').value);
+      const pct=parseFloat(ar.querySelector('#rp').value);
+      if(isNaN(pct)){alert('Enter a valid percentage.');return;}
+      const existing=state.records[client.id]||[];
+      if(existing.find(r=>r.week===week&&r.monthNum===monthNum&&r.year===year)){
+        if(!confirm('A record for this week already exists. Replace it?'))return;
       }
-      const filtered = existing.filter(r=>!(r.monthNum===monthNum && r.year===year));
-      filtered.push({ id: uid(), monthNum, year, pct, addedAt: Date.now() });
-      state.records[client.id] = filtered;
-      await sSet('records:'+client.id, filtered, true);
+      const filtered=existing.filter(r=>!(r.week===week&&r.monthNum===monthNum&&r.year===year));
+      filtered.push({id:uid(),week,monthNum,year,pct,addedAt:Date.now()});
+      state.records[client.id]=filtered;
+      await sSet('records:'+client.id,filtered);
       render();
     };
+    host.appendChild(ar);
   }
 
-  // ledger table
-  const ledgerPanel = document.createElement('div');
-  ledgerPanel.className = 'panel';
-  let rows = '';
-  if(calc.ledger.length===0){
-    rows = `<tr><td colspan="5" class="empty">No monthly results recorded yet.</td></tr>`;
+  /* Weekly ledger */
+  const lp=document.createElement('div');lp.className='panel';
+  const pRows=calc.ledger.filter(r=>r._ev==='profit').slice().reverse();
+  let rows='';
+  if(!pRows.length){
+    rows=`<tr><td colspan="${isAdmin?7:5}" class="empty">No weekly results yet.</td></tr>`;
   } else {
-    calc.ledger.slice().reverse().forEach(r=>{
-      rows += `
-        <tr>
-          <td>${monthName(r.monthNum)} ${r.year}</td>
-          <td><span class="pill ${r.pct>=0?'up':'down'}">${fmtPct(r.pct)}</span></td>
-          <td class="mono">${fmtMoney(r.before)}</td>
-          <td class="mono" style="color:var(--green)">+${fmtMoney(r.clientGain)}</td>
-          <td class="mono">${fmtMoney(r.after)}</td>
-          ${isAdmin && calc.ownerType!=='azfar' ? `<td class="mono">${fmtMoney(r.abuzarAfter)}</td>` : ''}
-          ${isAdmin && calc.ownerType!=='abuzar' ? `<td class="mono">${fmtMoney(r.azfarAfter)}</td>` : ''}
-        </tr>
-      `;
+    pRows.forEach(r=>{
+      rows+=`<tr>
+        <td>Wk${r.week} \u00b7 ${mName(r.monthNum)} ${r.year}</td>
+        <td><span class="pill ${r.pct>=0?'up':'down'}">${fmtP(r.pct)}</span></td>
+        <td class="mono">${fmtM(r.before)}</td>
+        <td class="mono" style="color:var(--green)">+${fmtM(r.cGain)}</td>
+        <td class="mono">${fmtM(r.after)}</td>
+        ${isAdmin&&calc.own!=='azfar'?`<td class="mono">${fmtM(r.abAfter)}</td>`:''}
+        ${isAdmin&&calc.own!=='abuzar'?`<td class="mono">${fmtM(r.azAfter)}</td>`:''}
+      </tr>`;
     });
   }
-  ledgerPanel.innerHTML = `
-    <div class="panel-title">Monthly ledger</div>
-    <table>
-      <thead><tr><th>Month</th><th>Gross return</th><th>Balance before</th><th>Client profit (${calc.clientPct}%)</th><th>Balance after</th>${isAdmin && calc.ownerType!=='azfar' ? '<th>Abuzar pool</th>' : ''}${isAdmin && calc.ownerType!=='abuzar' ? '<th>Azfar pool</th>' : ''}</tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-    ${isAdmin ? '<div style="font-size:11px; color:var(--text-faint); margin-top:10px;">Pool columns show the running balance after each month, including both the prior pool growing at that month\u2019s percent and the new share from this client\u2019s split.</div>' : ''}
-  `;
-  host.appendChild(ledgerPanel);
+  lp.innerHTML=`<div class="panel-title">Weekly ledger</div>
+    <table><thead><tr><th>Period</th><th>Gross return</th><th>Balance before</th><th>Your profit (${calc.cPct}%)</th><th>Balance after</th>${isAdmin&&calc.own!=='azfar'?'<th>Abuzar pool</th>':''}${isAdmin&&calc.own!=='abuzar'?'<th>Azfar pool</th>':''}</tr></thead>
+    <tbody>${rows}</tbody></table>`;
+  host.appendChild(lp);
 
-  // chat
-  const chatPanel = document.createElement('div');
-  chatPanel.className = 'panel';
-  chatPanel.innerHTML = `<div class="panel-title">Messages with ${isAdmin? client.name : 'your advisor'}</div>`;
-  const chatBox = document.createElement('div');
-  chatBox.className = 'chat-box';
-  const msgsHost = document.createElement('div');
-  msgsHost.className = 'chat-msgs';
-  const msgs = state.chats[client.id] || [];
-  if(msgs.length===0){
-    msgsHost.innerHTML = `<div class="empty">No messages yet. Say hello.</div>`;
-  } else {
+  /* Transaction history */
+  const txns=state.transactions[client.id]||[];
+  if(txns.length){
+    const tp=document.createElement('div');tp.className='panel';
+    let tr2='';
+    txns.slice().sort((a,b)=>b.requestedAt-a.requestedAt).forEach(t=>{
+      tr2+=`<tr class="${t.type==='deposit'?'txn-dep':'txn-wd'}">
+        <td style="text-transform:capitalize;font-weight:500;">${t.type}</td>
+        <td class="mono" style="color:${t.type==='deposit'?'var(--green)':'var(--amber)'}">${t.type==='deposit'?'+':'\u2212'}${fmtM(t.amount)}</td>
+        <td><span class="pill ${t.status}">${t.status}</span></td>
+        <td style="font-size:12px;color:var(--text-faint);">${new Date(t.requestedAt).toLocaleDateString()}</td>
+        ${t.note?`<td style="font-size:12px;color:var(--text-dim);">${esc(t.note)}</td>`:'<td></td>'}
+      </tr>`;
+    });
+    tp.innerHTML=`<div class="panel-title">Deposit & withdrawal history</div>
+      <table><thead><tr><th>Type</th><th>Amount</th><th>Status</th><th>Requested</th><th>Note</th></tr></thead>
+      <tbody>${tr2}</tbody></table>`;
+    host.appendChild(tp);
+  }
+
+  /* Chat */
+  const cp=document.createElement('div');cp.className='panel';
+  cp.innerHTML=`<div class="panel-title">Messages ${isAdmin?'with '+esc(client.name):'with your advisor'}</div>`;
+
+  if(!isAdmin){
+    const rb=document.createElement('div');rb.className='req-btns';
+    rb.innerHTML=`<button class="btn btn-primary btn-sm" id="drb" style="flex:1">+ Request Deposit</button>
+                  <button class="btn btn-amber btn-sm" id="wrb" style="flex:1">\u2212 Request Withdrawal</button>`;
+    cp.appendChild(rb);
+    rb.querySelector('#drb').onclick=()=>{state.modal={type:'reqTxn',txnType:'deposit',clientId:client.id};render();};
+    rb.querySelector('#wrb').onclick=()=>{state.modal={type:'reqTxn',txnType:'withdrawal',clientId:client.id};render();};
+  }
+
+  const chatBox=document.createElement('div');chatBox.className='chat-box';
+  const msgsHost=document.createElement('div');msgsHost.className='chat-msgs';
+  const msgs=state.chats[client.id]||[];
+
+  if(!msgs.length){msgsHost.innerHTML=`<div class="empty">No messages yet.</div>`;}
+  else{
     msgs.forEach(m=>{
-      const mine = isAdmin ? m.sender==='admin' : m.sender==='client';
-      const row = document.createElement('div');
-      row.className = 'msg-row ' + (mine?'mine':'');
-      row.innerHTML = `<div class="msg ${mine?'mine':'theirs'}">${escapeHtml(m.text)}<div class="msg-time">${new Date(m.ts).toLocaleString()}</div></div>`;
+      const mine=isAdmin?(m.sender==='admin'):(m.sender==='client');
+      const row=document.createElement('div');row.className='msg-row '+(mine?'mine':'');
+      if(m.msgType==='ticket'){
+        const txn=(state.transactions[client.id]||[]).find(t=>t.id===m.ticketId);
+        const status=txn?txn.status:'pending';
+        const tc=document.createElement('div');
+        tc.innerHTML=`<div class="ticket">
+          <div class="ticket-header">${m.ticketTxnType==='deposit'?'\uD83D\uDCE5 Deposit Request':'\uD83D\uDCE4 Withdrawal Request'}</div>
+          <div class="ticket-amount ${m.ticketTxnType}">${fmtM(m.ticketAmount)}</div>
+          ${m.ticketNote?`<div style="font-size:12px;color:var(--text-dim);margin-bottom:6px;">${esc(m.ticketNote)}</div>`:''}
+          <div style="font-size:10px;color:var(--text-faint);margin-bottom:6px;">${new Date(m.ts).toLocaleString()}</div>
+          <span class="pill ${status}">${status.toUpperCase()}</span>
+          ${isAdmin&&status==='pending'?`<div class="ticket-actions">
+            <button class="btn btn-primary btn-sm" data-tid="${m.ticketId}" data-action="approve">Approve</button>
+            <button class="btn btn-danger btn-sm" data-tid="${m.ticketId}" data-action="reject">Reject</button>
+          </div>`:''}
+        </div>`;
+        tc.querySelectorAll('[data-action]').forEach(btn=>{
+          btn.onclick=async()=>{
+            const tid=btn.dataset.tid,action=btn.dataset.action;
+            const txns=state.transactions[client.id]||[];
+            const t=txns.find(t=>t.id===tid);
+            if(!t)return;
+            t.status=action==='approve'?'approved':'rejected';
+            t.processedAt=Date.now();
+            state.transactions[client.id]=txns;
+            await sSet('transactions:'+client.id,txns);
+            render();
+          };
+        });
+        row.appendChild(tc);
+      } else {
+        const el=document.createElement('div');el.className='msg '+(mine?'mine':'theirs');
+        el.innerHTML=esc(m.text)+`<div class="msg-time">${new Date(m.ts).toLocaleString()}</div>`;
+        row.appendChild(el);
+      }
       msgsHost.appendChild(row);
     });
   }
+
   chatBox.appendChild(msgsHost);
-  const inputRow = document.createElement('div');
-  inputRow.className = 'chat-input-row';
-  inputRow.innerHTML = `<input id="chat-input" placeholder="Type a message"><button class="btn btn-primary" id="chat-send">Send</button>`;
-  chatBox.appendChild(inputRow);
-  chatPanel.appendChild(chatBox);
-  host.appendChild(chatPanel);
+  const ir=document.createElement('div');ir.className='chat-input-row';
+  ir.innerHTML=`<input id="ci" placeholder="Type a message"><button class="btn btn-primary" id="cs">Send</button>`;
+  chatBox.appendChild(ir);
+  cp.appendChild(chatBox);
+  host.appendChild(cp);
+  setTimeout(()=>{msgsHost.scrollTop=msgsHost.scrollHeight;},0);
 
-  setTimeout(()=>{ msgsHost.scrollTop = msgsHost.scrollHeight; }, 0);
-
-  const sendMsg = async ()=>{
-    const inp = inputRow.querySelector('#chat-input');
-    const text = inp.value.trim();
-    if(!text) return;
-    const list = state.chats[client.id] || [];
-    list.push({ id: uid(), sender: isAdmin?'admin':'client', text, ts: Date.now() });
-    state.chats[client.id] = list;
-    await sSet('chat:'+client.id, list, true);
-    inp.value='';
-    render();
+  const send=async()=>{
+    const inp=ir.querySelector('#ci');
+    const text=inp.value.trim();if(!text)return;
+    const list=state.chats[client.id]||[];
+    list.push({id:uid(),sender:isAdmin?'admin':'client',text,ts:Date.now()});
+    state.chats[client.id]=list;
+    await sSet('chat:'+client.id,list);
+    inp.value='';render();
   };
-  inputRow.querySelector('#chat-send').onclick = sendMsg;
-  inputRow.querySelector('#chat-input').addEventListener('keydown', e=>{ if(e.key==='Enter') sendMsg(); });
-
-  if(isAdmin){
-    info.querySelector('#edit-client-btn')?.addEventListener('click', ()=>{ state.modal='editClient'; render(); });
-  }
-
+  ir.querySelector('#cs').onclick=send;
+  ir.querySelector('#ci').addEventListener('keydown',e=>{if(e.key==='Enter')send();});
   return host;
 }
 
-function escapeHtml(s){
-  const d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
-}
-
-/* ============================== RENDER: CLIENT VIEW ============================== */
+/* ===== CLIENT VIEW ===== */
 function ViewClient(){
-  const wrap = document.createElement('div');
-  wrap.className = 'app';
-  const client = state.loggedClient;
-
-  const top = document.createElement('div');
-  top.className = 'topbar';
-  top.innerHTML = `
-    <div class="brand"><div class="brand-mark">A2</div><div class="brand-name">A2 Capital</div></div>
-    <div class="topbar-right">
-      <span>${client.email}</span>
-      <button class="btn btn-ghost btn-sm" id="logout-btn">Log out</button>
-    </div>
-  `;
-  top.querySelector('#logout-btn').onclick = ()=>{ state.view='login'; state.loggedClient=null; render(); };
+  const wrap=document.createElement('div');wrap.className='app';
+  const client=state.loggedClient;
+  const top=document.createElement('div');top.className='topbar';
+  top.innerHTML=`<div class="brand"><div class="brand-mark">A2</div><div class="brand-name">A2 Capital</div></div>
+    <div class="topbar-right"><span>${esc(client.email)}</span><button class="btn btn-ghost btn-sm" id="lo">Log out</button></div>`;
+  top.querySelector('#lo').onclick=()=>{state.view='login';state.loggedClient=null;render();};
   wrap.appendChild(top);
-
-  wrap.appendChild(ClientDetailPanel(client, false));
+  wrap.appendChild(ClientDetailPanel(client,false));
   return wrap;
 }
 
-/* ============================== MODALS ============================== */
+/* ===== MODALS ===== */
 function renderModal(){
-  if(!state.modal) return null;
-  const bg = document.createElement('div');
-  bg.className = 'modal-bg';
-  bg.onclick = (e)=>{ if(e.target===bg){ state.modal=null; render(); } };
+  if(!state.modal)return null;
+  const bg=document.createElement('div');bg.className='modal-bg';
+  bg.onclick=e=>{if(e.target===bg){state.modal=null;render();}};
+  const modal=document.createElement('div');modal.className='modal';
 
-  const modal = document.createElement('div');
-  modal.className = 'modal';
+  if(state.modal&&state.modal.type==='reqTxn'){
+    const{txnType,clientId}=state.modal;
+    modal.innerHTML=`<h3>${txnType==='deposit'?'Request a Deposit':'Request a Withdrawal'}</h3>
+      <div class="field"><label>Amount (USD)</label><input id="ma" type="number" step="0.01" min="0" placeholder="0.00"></div>
+      <div class="field"><label>Note (optional)</label><textarea id="mn" rows="2" placeholder="Any note for your advisor"></textarea></div>
+      <div class="modal-actions">
+        <button class="btn" id="m-cancel" style="flex:1">Cancel</button>
+        <button class="btn ${txnType==='deposit'?'btn-primary':'btn-amber'}" id="m-save" style="flex:1">Submit request</button>
+      </div>`;
+    modal.querySelector('#m-save').onclick=async()=>{
+      const amount=parseFloat(modal.querySelector('#ma').value);
+      const note=modal.querySelector('#mn').value.trim();
+      if(isNaN(amount)||amount<=0){alert('Enter a valid amount.');return;}
+      const tid=uid();
+      const txns=state.transactions[clientId]||[];
+      txns.push({id:tid,type:txnType,amount,status:'pending',requestedAt:Date.now(),processedAt:null,note});
+      state.transactions[clientId]=txns;
+      await sSet('transactions:'+clientId,txns);
+      const chats=state.chats[clientId]||[];
+      chats.push({id:uid(),sender:'client',ts:Date.now(),msgType:'ticket',ticketId:tid,ticketTxnType:txnType,ticketAmount:amount,ticketNote:note,text:''});
+      state.chats[clientId]=chats;
+      await sSet('chat:'+clientId,chats);
+      state.modal=null;render();
+    };
+  }
 
-  if(state.modal === 'addClient'){
-    modal.innerHTML = `
-      <h3>Add a new client</h3>
-      <div class="field"><label>Full name</label><input id="m-name" placeholder="Client name"></div>
-      <div class="field"><label>Email</label><input id="m-email" type="email" placeholder="name@email.com"></div>
-      <div class="field"><label>Phone</label><input id="m-phone" placeholder="03xx-xxxxxxx"></div>
+  else if(state.modal==='addClient'){
+    modal.innerHTML=`<h3>Add a new client</h3>
+      <div class="field"><label>Full name</label><input id="mn" placeholder="Client name"></div>
+      <div class="field"><label>Email</label><input id="me" type="email" placeholder="name@email.com"></div>
+      <div class="field"><label>Phone</label><input id="mph" placeholder="03xx-xxxxxxx"></div>
       <div class="row">
-        <div class="field"><label>Join date</label><input id="m-join" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
-        <div class="field"><label>Initial deposit (USD)</label><input id="m-deposit" type="number" step="0.01" placeholder="1000"></div>
+        <div class="field"><label>Join date</label><input id="mj" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
+        <div class="field"><label>Initial deposit (USD)</label><input id="md" type="number" step="0.01" placeholder="1000"></div>
       </div>
-      <div class="field"><label>Client passcode <span class="badge-30">(share this with them)</span></label><input id="m-pass" placeholder="Set a passcode"></div>
-      <div class="field"><label>Client's share of profit (%) <span class="badge-30">e.g. 70, or 100 for no fee</span></label><input id="m-clientpct" type="number" step="0.1" min="0" max="100" value="70"></div>
-      <div class="field"><label>Whose client is this?</label>
-        <select id="m-owner">
-          <option value="shared">Shared (Abuzar + Azfar)</option>
-          <option value="abuzar">Abuzar only</option>
-          <option value="azfar">Azfar only</option>
-        </select>
+      <div class="field"><label>Client passcode <span class="badge-30">share with them</span></label><input id="mp" placeholder="Set a passcode"></div>
+      <div class="field"><label>Client profit share (%) <span class="badge-30">100 = no fee</span></label><input id="mc" type="number" step="0.1" min="0" max="100" value="70"></div>
+      <div class="field"><label>Whose client?</label>
+        <select id="mo"><option value="shared">Shared (Abuzar + Azfar)</option><option value="abuzar">Abuzar only</option><option value="azfar">Azfar only</option></select>
       </div>
-      <div class="field" id="m-splitwrap"><label>Abuzar's share of the cut (%) <span class="badge-30">rest goes to Azfar</span></label><input id="m-split" type="number" step="0.1" min="0" max="100" value="50"></div>
+      <div class="field" id="sw"><label>Abuzar's share of the cut (%) <span class="badge-30">rest to Azfar</span></label><input id="ms" type="number" step="0.1" min="0" max="100" value="50"></div>
       <div class="modal-actions">
         <button class="btn" id="m-cancel" style="flex:1">Cancel</button>
         <button class="btn btn-primary" id="m-save" style="flex:1">Add client</button>
-      </div>
-    `;
-    const ownerSel = modal.querySelector('#m-owner');
-    const splitWrap = modal.querySelector('#m-splitwrap');
-    const toggleSplit = ()=>{ splitWrap.style.display = ownerSel.value==='shared' ? 'block' : 'none'; };
-    ownerSel.addEventListener('change', toggleSplit);
-    toggleSplit();
-    modal.querySelector('#m-save').onclick = async ()=>{
-      const name = modal.querySelector('#m-name').value.trim();
-      const email = modal.querySelector('#m-email').value.trim();
-      const phone = modal.querySelector('#m-phone').value.trim();
-      const joinDate = modal.querySelector('#m-join').value;
-      const deposit = parseFloat(modal.querySelector('#m-deposit').value);
-      const pass = modal.querySelector('#m-pass').value.trim();
-      const clientProfitPct = parseFloat(modal.querySelector('#m-clientpct').value);
-      const ownerType = modal.querySelector('#m-owner').value;
-      const splitAbuzarPct = parseFloat(modal.querySelector('#m-split').value);
-      if(!name || !email || !pass || isNaN(deposit)){
-        alert('Please fill in name, email, passcode, and initial deposit.');
-        return;
-      }
-      if(isNaN(clientProfitPct) || clientProfitPct < 0 || clientProfitPct > 100){
-        alert('Client profit share must be a number between 0 and 100.');
-        return;
-      }
-      if(state.clients.find(c=>c.email.toLowerCase()===email.toLowerCase())){
-        alert('A client with this email already exists.');
-        return;
-      }
-      const newClient = {
-        id: uid(), name, email, phone, joinDate, initialDeposit: deposit, passcode: pass,
-        clientProfitPct, ownerType,
-        splitAbuzarPct: isNaN(splitAbuzarPct) ? 50 : splitAbuzarPct
-      };
-      const updated = [...state.clients, newClient];
-      state.clients = updated;
-      await sSet('clients', updated, true);
-      state.modal = null;
-      state.currentClientId = newClient.id;
-      await loadRecords(newClient.id);
-      await loadChat(newClient.id);
+      </div>`;
+    const os=modal.querySelector('#mo'),sw=modal.querySelector('#sw');
+    const tog=()=>{sw.style.display=os.value==='shared'?'block':'none';};
+    os.addEventListener('change',tog);tog();
+    modal.querySelector('#m-save').onclick=async()=>{
+      const name=modal.querySelector('#mn').value.trim();
+      const email=modal.querySelector('#me').value.trim();
+      const phone=modal.querySelector('#mph').value.trim();
+      const joinDate=modal.querySelector('#mj').value;
+      const deposit=parseFloat(modal.querySelector('#md').value);
+      const pass=modal.querySelector('#mp').value.trim();
+      const cPct=parseFloat(modal.querySelector('#mc').value);
+      const own=modal.querySelector('#mo').value;
+      const aSplit=parseFloat(modal.querySelector('#ms').value)||50;
+      if(!name||!email||!pass||isNaN(deposit)){alert('Fill in name, email, passcode, and deposit.');return;}
+      if(isNaN(cPct)||cPct<0||cPct>100){alert('Profit share must be 0-100.');return;}
+      if(state.clients.find(c=>c.email.toLowerCase()===email.toLowerCase())){alert('Email already exists.');return;}
+      const nc={id:uid(),name,email,phone,joinDate,initialDeposit:deposit,passcode:pass,clientProfitPct:cPct,ownerType:own,splitAbuzarPct:aSplit};
+      const updated=[...state.clients,nc];state.clients=updated;
+      await sSet('clients',updated);
+      state.modal=null;state.currentClientId=nc.id;
+      await loadRecords(nc.id);await loadChat(nc.id);await loadTransactions(nc.id);
       render();
     };
   }
 
-  if(state.modal === 'editClient'){
-    const client = state.clients.find(c=>c.id===state.currentClientId);
-    const curPct = (client.clientProfitPct !== undefined && client.clientProfitPct !== null) ? client.clientProfitPct : 70;
-    const curOwner = client.ownerType || 'shared';
-    const curSplit = (client.splitAbuzarPct !== undefined && client.splitAbuzarPct !== null) ? client.splitAbuzarPct : 50;
-    modal.innerHTML = `
-      <h3>Edit ${client.name}</h3>
-      <div class="field"><label>Full name</label><input id="m-name" value="${client.name}"></div>
-      <div class="field"><label>Email</label><input id="m-email" value="${client.email}"></div>
-      <div class="field"><label>Phone</label><input id="m-phone" value="${client.phone||''}"></div>
-      <div class="field"><label>Client passcode</label><input id="m-pass" value="${client.passcode}"></div>
-      <div class="field"><label>Client's share of profit (%) <span class="badge-30">e.g. 70, or 100 for no fee</span></label><input id="m-clientpct" type="number" step="0.1" min="0" max="100" value="${curPct}"></div>
-      <div class="field"><label>Whose client is this?</label>
-        <select id="m-owner">
-          <option value="shared" ${curOwner==='shared'?'selected':''}>Shared (Abuzar + Azfar)</option>
-          <option value="abuzar" ${curOwner==='abuzar'?'selected':''}>Abuzar only</option>
-          <option value="azfar" ${curOwner==='azfar'?'selected':''}>Azfar only</option>
-        </select>
+  else if(state.modal==='editClient'){
+    const cl=state.clients.find(c=>c.id===state.currentClientId);
+    const cp=cl.clientProfitPct??70,co=cl.ownerType||'shared',cs=cl.splitAbuzarPct??50;
+    modal.innerHTML=`<h3>Edit ${esc(cl.name)}</h3>
+      <div class="field"><label>Full name</label><input id="mn" value="${esc(cl.name)}"></div>
+      <div class="field"><label>Email</label><input id="me" value="${esc(cl.email)}"></div>
+      <div class="field"><label>Phone</label><input id="mph" value="${esc(cl.phone||'')}"></div>
+      <div class="field"><label>Client passcode</label><input id="mp" value="${esc(cl.passcode)}"></div>
+      <div class="field"><label>Client profit share (%)</label><input id="mc" type="number" step="0.1" min="0" max="100" value="${cp}"></div>
+      <div class="field"><label>Whose client?</label>
+        <select id="mo"><option value="shared" ${co==='shared'?'selected':''}>Shared (Abuzar + Azfar)</option><option value="abuzar" ${co==='abuzar'?'selected':''}>Abuzar only</option><option value="azfar" ${co==='azfar'?'selected':''}>Azfar only</option></select>
       </div>
-      <div class="field" id="m-splitwrap"><label>Abuzar's share of the cut (%) <span class="badge-30">rest goes to Azfar</span></label><input id="m-split" type="number" step="0.1" min="0" max="100" value="${curSplit}"></div>
+      <div class="field" id="sw"><label>Abuzar's share of the cut (%)</label><input id="ms" type="number" step="0.1" min="0" max="100" value="${cs}"></div>
       <div class="modal-actions">
         <button class="btn btn-danger" id="m-delete" style="flex:1">Remove client</button>
         <button class="btn btn-primary" id="m-save" style="flex:1">Save</button>
       </div>
-      <button class="btn btn-ghost" id="m-cancel" style="width:100%; margin-top:10px;">Cancel</button>
-    `;
-    const ownerSel2 = modal.querySelector('#m-owner');
-    const splitWrap2 = modal.querySelector('#m-splitwrap');
-    const toggleSplit2 = ()=>{ splitWrap2.style.display = ownerSel2.value==='shared' ? 'block' : 'none'; };
-    ownerSel2.addEventListener('change', toggleSplit2);
-    toggleSplit2();
-    modal.querySelector('#m-save').onclick = async ()=>{
-      const clientProfitPct = parseFloat(modal.querySelector('#m-clientpct').value);
-      const splitAbuzarPct = parseFloat(modal.querySelector('#m-split').value);
-      if(isNaN(clientProfitPct) || clientProfitPct < 0 || clientProfitPct > 100){
-        alert('Client profit share must be a number between 0 and 100.');
-        return;
-      }
-      client.name = modal.querySelector('#m-name').value.trim();
-      client.email = modal.querySelector('#m-email').value.trim();
-      client.phone = modal.querySelector('#m-phone').value.trim();
-      client.passcode = modal.querySelector('#m-pass').value.trim();
-      client.clientProfitPct = clientProfitPct;
-      client.ownerType = modal.querySelector('#m-owner').value;
-      client.splitAbuzarPct = isNaN(splitAbuzarPct) ? 50 : splitAbuzarPct;
-      await sSet('clients', state.clients, true);
-      state.modal = null;
-      render();
+      <button class="btn btn-ghost" id="m-cancel" style="width:100%;margin-top:10px;">Cancel</button>`;
+    const os2=modal.querySelector('#mo'),sw2=modal.querySelector('#sw');
+    const tog2=()=>{sw2.style.display=os2.value==='shared'?'block':'none';};
+    os2.addEventListener('change',tog2);tog2();
+    modal.querySelector('#m-save').onclick=async()=>{
+      const cPct=parseFloat(modal.querySelector('#mc').value);
+      const spl=parseFloat(modal.querySelector('#ms').value)||50;
+      if(isNaN(cPct)||cPct<0||cPct>100){alert('Profit share must be 0-100.');return;}
+      cl.name=modal.querySelector('#mn').value.trim();
+      cl.email=modal.querySelector('#me').value.trim();
+      cl.phone=modal.querySelector('#mph').value.trim();
+      cl.passcode=modal.querySelector('#mp').value.trim();
+      cl.clientProfitPct=cPct;cl.ownerType=modal.querySelector('#mo').value;cl.splitAbuzarPct=spl;
+      await sSet('clients',state.clients);state.modal=null;render();
     };
-    modal.querySelector('#m-delete').onclick = async ()=>{
-      if(!confirm('Remove this client? Their records and chat history will stay in storage but they will no longer appear in your list.')) return;
-      state.clients = state.clients.filter(c=>c.id!==client.id);
-      await sSet('clients', state.clients, true);
-      state.modal = null;
-      state.currentClientId = null;
-      render();
+    modal.querySelector('#m-delete').onclick=async()=>{
+      if(!confirm('Remove this client?'))return;
+      state.clients=state.clients.filter(c=>c.id!==cl.id);
+      await sSet('clients',state.clients);
+      state.modal=null;state.currentClientId=null;render();
     };
   }
 
-  modal.querySelector('#m-cancel')?.addEventListener('click', ()=>{ state.modal=null; render(); });
-
-  bg.appendChild(modal);
-  return bg;
+  modal.querySelector('#m-cancel')?.addEventListener('click',()=>{state.modal=null;render();});
+  bg.appendChild(modal);return bg;
 }
 
-/* ============================== MAIN RENDER ============================== */
-window.__render = function(){
-  const root = document.getElementById('root');
-  root.innerHTML = '';
+/* ===== MAIN RENDER ===== */
+window.__render=function(){
+  const root=document.getElementById('root');root.innerHTML='';
   let view;
-  if(state.view==='login') view = ViewLogin();
-  else if(state.view==='admin') view = ViewAdmin();
-  else if(state.view==='client') view = ViewClient();
+  if(state.view==='login')view=ViewLogin();
+  else if(state.view==='admin')view=ViewAdmin();
+  else if(state.view==='client')view=ViewClient();
   root.appendChild(view);
-  const modal = renderModal();
-  if(modal) root.appendChild(modal);
+  const m=renderModal();if(m)root.appendChild(m);
 };
-
-(async function init(){
-  await loadAdminConfig();
-  render();
-})();
+(async function init(){await loadAdminConfig();render();})();
 </script>
 </body>
 </html>

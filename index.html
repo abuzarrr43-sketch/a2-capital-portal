@@ -376,25 +376,34 @@ function ClientDetailPanel(client,isAdmin){
     const now=new Date();
     ar.innerHTML=`<div class="panel-title">Add result <span class="sub">gross %, before the ${calc.cPct}/${100-calc.cPct} split</span></div>
       <div class="row">
-        <div class="field"><label>Date</label><input id="rd1" type="date" value="${now.toISOString().slice(0,10)}"><div id="rd1-label" style="font-size:11px;color:var(--green);margin-top:5px;"></div></div>
+        <div class="field"><label>From</label><input id="rd1" type="date" value="${now.toISOString().slice(0,10)}"><div id="rd1-lbl" style="font-size:11px;color:var(--green);margin-top:5px;"></div></div>
+        <div class="field"><label>To</label><input id="rd2" type="date" value="${now.toISOString().slice(0,10)}"><div id="rd2-lbl" style="font-size:11px;color:var(--green);margin-top:5px;"></div></div>
         <div class="field"><label>Gross %</label><input id="rp" type="number" step="0.01" placeholder="e.g. 4.5"></div>
       </div>
       <button class="btn btn-primary" id="srb">Save</button>`;
-    const fmtFull=d=>{if(!d)return'';const[y,m,day]=d.split('-');return`${parseInt(day)} ${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(m)-1]} ${y}`;};
-    const updateLabels=()=>{ar.querySelector('#rd1-label').textContent=fmtFull(ar.querySelector('#rd1').value);};
-    ar.querySelector('#rd1').addEventListener('change',updateLabels);
-    updateLabels();
+    const fmtFull=d=>{if(!d)return'';const[y,m,day]=d.split('-');return`${parseInt(day)} ${['January','February','March','April','May','June','July','August','September','October','November','December'][parseInt(m)-1]} ${y}`;};
+    const fmtShort=d=>{if(!d)return'';const[y,m,day]=d.split('-');return`${parseInt(day)} ${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(m)-1]} ${y}`;};
+    const upd=()=>{
+      ar.querySelector('#rd1-lbl').textContent=fmtFull(ar.querySelector('#rd1').value);
+      ar.querySelector('#rd2-lbl').textContent=fmtFull(ar.querySelector('#rd2').value);
+    };
+    ar.querySelector('#rd1').addEventListener('change',upd);
+    ar.querySelector('#rd2').addEventListener('change',upd);
+    upd();
     ar.querySelector('#srb').onclick=async()=>{
-      const date=ar.querySelector('#rd1').value;
+      const dateFrom=ar.querySelector('#rd1').value;
+      const dateTo=ar.querySelector('#rd2').value;
       const pct=parseFloat(ar.querySelector('#rp').value);
-      if(!date){alert('Pick a date.');return;}
+      if(!dateFrom||!dateTo){alert('Pick both dates.');return;}
+      if(dateTo<dateFrom){alert('End date must be after start date.');return;}
       if(isNaN(pct)){alert('Enter a valid percentage.');return;}
       const existing=state.records[client.id]||[];
-      if(existing.find(r=>(r.dateFrom||r.date)===date)){
-        if(!confirm('A record for this date already exists. Replace it?'))return;
+      const dateKey=dateFrom+'_'+dateTo;
+      if(existing.find(r=>r.dateKey===dateKey)){
+        if(!confirm('A record for this range already exists. Replace it?'))return;
       }
-      const filtered=existing.filter(r=>(r.dateFrom||r.date)!==date);
-      filtered.push({id:uid(),dateFrom:date,dateTo:date,date,pct,addedAt:Date.now()});
+      const filtered=existing.filter(r=>r.dateKey!==dateKey);
+      filtered.push({id:uid(),dateKey,dateFrom,dateTo,pct,addedAt:Date.now()});
       state.records[client.id]=filtered;
       await sSet('records:'+client.id,filtered);
       render();
@@ -422,29 +431,74 @@ function ClientDetailPanel(client,isAdmin){
 
   /* Weekly ledger */
   const lp=document.createElement('div');lp.className='panel';
+  const fmtS=d=>{if(!d)return'';const[y,m,day]=d.split('-');return`${parseInt(day)} ${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(m)-1]} ${y}`;};
   const pRows=calc.ledger.filter(r=>r._ev==='profit').slice().reverse();
   let rows='';
   if(!pRows.length){
-    rows=`<tr><td colspan="${isAdmin?7:5}" class="empty">No weekly results yet.</td></tr>`;
+    rows=`<tr><td colspan="${isAdmin?7:5}" class="empty">No results yet.</td></tr>`;
   } else {
     pRows.forEach(r=>{
-      const fmt=d=>new Date(d+'T00:00:00').toLocaleDateString(undefined,{day:'numeric',month:'short'});
-      const periodLabel=r.dateFrom&&r.dateTo?(r.dateFrom===r.dateTo?fmt(r.dateFrom):`${fmt(r.dateFrom)} \u2013 ${fmt(r.dateTo)}`):(r.date?fmt(r.date):'-');
+      const df=r.dateFrom||r.date||'';
+      const dt=r.dateTo||r.date||'';
+      const rangeLabel=df===dt?fmtS(df):`${fmtS(df)} \u2013 ${fmtS(dt)}`;
       rows+=`<tr>
-        <td>${periodLabel}</td>
+        <td style="font-size:12px;">${rangeLabel}</td>
         <td><span class="pill ${r.pct>=0?'up':'down'}">${fmtP(r.pct)}</span></td>
         <td class="mono">${fmtM(r.before)}</td>
         <td class="mono" style="color:var(--green)">+${fmtM(r.cGain)}</td>
         <td class="mono">${fmtM(r.after)}</td>
         ${isAdmin&&calc.own!=='azfar'?`<td class="mono">${fmtM(r.abAfter)}</td>`:''}
         ${isAdmin&&calc.own!=='abuzar'?`<td class="mono">${fmtM(r.azAfter)}</td>`:''}
+        ${isAdmin?`<td><button class="btn btn-ghost btn-sm" style="color:var(--red);padding:4px 8px;" data-delid="${r.id}">\u00d7</button></td>`:''}
       </tr>`;
     });
   }
   lp.innerHTML=`<div class="panel-title">Ledger</div>
-    <table><thead><tr><th>Date</th><th>Gross return</th><th>Balance before</th><th>Your profit (${calc.cPct}%)</th><th>Balance after</th>${isAdmin&&calc.own!=='azfar'?'<th>Abuzar pool</th>':''}${isAdmin&&calc.own!=='abuzar'?'<th>Azfar pool</th>':''}</tr></thead>
+    <table><thead><tr><th>Period</th><th>Gross return</th><th>Balance before</th><th>Your profit (${calc.cPct}%)</th><th>Balance after</th>${isAdmin&&calc.own!=='azfar'?'<th>Abuzar pool</th>':''}${isAdmin&&calc.own!=='abuzar'?'<th>Azfar pool</th>':''}${isAdmin?'<th></th>':''}</tr></thead>
     <tbody>${rows}</tbody></table>`;
+  if(isAdmin){
+    lp.querySelectorAll('[data-delid]').forEach(btn=>{
+      btn.onclick=async()=>{
+        if(!confirm('Delete this entry?'))return;
+        const filtered=(state.records[client.id]||[]).filter(r=>r.id!==btn.dataset.delid);
+        state.records[client.id]=filtered;
+        await sSet('records:'+client.id,filtered);
+        render();
+      };
+    });
+  }
   host.appendChild(lp);
+
+  /* Monthly summary */
+  const profitEvs=calc.ledger.filter(r=>r._ev==='profit');
+  if(profitEvs.length){
+    const monthMap={};
+    profitEvs.forEach(r=>{
+      const d=r.dateFrom||r.date||'';
+      const key=d.slice(0,7); // YYYY-MM
+      if(!monthMap[key])monthMap[key]={clientGain:0,gross:0,count:0};
+      monthMap[key].clientGain+=r.cGain;
+      monthMap[key].gross+=r.gross;
+      monthMap[key].count++;
+    });
+    const mp=document.createElement('div');mp.className='panel';
+    const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    let mrows='';
+    Object.keys(monthMap).sort().reverse().forEach(k=>{
+      const[y,m]=k.split('-');
+      const label=`${months[parseInt(m)-1]} ${y}`;
+      const d=monthMap[k];
+      mrows+=`<tr>
+        <td style="font-weight:500;">${label}</td>
+        <td class="mono" style="color:var(--green)">+${fmtM(d.clientGain)}</td>
+        <td style="font-size:12px;color:var(--text-dim);">${d.count} entr${d.count===1?'y':'ies'}</td>
+      </tr>`;
+    });
+    mp.innerHTML=`<div class="panel-title">Monthly summary</div>
+      <table><thead><tr><th>Month</th><th>Your profit</th><th>Entries</th></tr></thead>
+      <tbody>${mrows}</tbody></table>`;
+    host.appendChild(mp);
+  }
 
   /* Transaction history */
   const txns=state.transactions[client.id]||[];

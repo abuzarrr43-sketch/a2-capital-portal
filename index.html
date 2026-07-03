@@ -440,7 +440,7 @@ function ClientDetailPanel(client,isAdmin){
     pRows.forEach(r=>{
       const df=r.dateFrom||r.date||'';
       const dt=r.dateTo||r.date||'';
-      const rangeLabel=df===dt?fmtS(df):`${fmtS(df)} \u2013 ${fmtS(dt)}`;
+      const rangeLabel=!df?'—':df===dt?fmtS(df):`${fmtS(df)} \u2013 ${fmtS(dt)}`;
       rows+=`<tr>
         <td style="font-size:12px;">${rangeLabel}</td>
         <td><span class="pill ${r.pct>=0?'up':'down'}">${fmtP(r.pct)}</span></td>
@@ -475,7 +475,8 @@ function ClientDetailPanel(client,isAdmin){
     const monthMap={};
     profitEvs.forEach(r=>{
       const d=r.dateFrom||r.date||'';
-      const key=d.slice(0,7); // YYYY-MM
+      if(!d||d.length<7)return;
+      const key=d.slice(0,7);
       if(!monthMap[key])monthMap[key]={clientGain:0,gross:0,count:0};
       monthMap[key].clientGain+=r.cGain;
       monthMap[key].gross+=r.gross;

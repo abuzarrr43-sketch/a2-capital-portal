@@ -4,113 +4,147 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>A2 Capital</title>
+<meta name="theme-color" content="#f4efe4">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
   :root{
-    --bg:#0B0F14; --panel:#11161D; --panel-2:#161D26; --border:#232C38; --border-soft:#1A222C;
-    --text:#E7ECF2; --text-dim:#8B97A8; --text-faint:#5C6878;
-    --green:#1FD17C; --green-dim:#163024; --red:#FF6B6B; --red-dim:#2E1818;
-    --amber:#F5A623; --amber-dim:#2E2010; --accent:#3D8BFF;
+    --bg:#f4efe4; --panel:#ebe4d4; --panel-2:#e2d9c6;
+    --border:#d4cbb8; --border-soft:#d9d0bd;
+    --text:#1c1914; --text-dim:#6b6458; --text-faint:#8a8274;
+    --green:#1f6b45; --green-dim:#dce8df;
+    --red:#9b3d32; --red-dim:#ead8d4;
+    --amber:#9a6b20; --amber-dim:#eadcc4;
+    --accent:#1f6b45;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
-  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;line-height:1.5;}
-  .mono{font-family:'JetBrains Mono',monospace;}
+  html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',system-ui,sans-serif;min-height:100%;line-height:1.5;-webkit-font-smoothing:antialiased;}
+  .mono{font-family:'IBM Plex Mono',ui-monospace,monospace;}
+  .display{font-family:'Fraunces',Georgia,serif;}
   ::-webkit-scrollbar{width:8px;height:8px;}
   ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
-  .app{max-width:1100px;margin:0 auto;padding:24px 20px 80px;}
-  .topbar{display:flex;align-items:center;justify-content:space-between;padding-bottom:20px;margin-bottom:24px;border-bottom:1px solid var(--border-soft);}
-  .brand{display:flex;align-items:center;gap:10px;}
-  .brand-mark{width:30px;height:30px;border-radius:7px;background:linear-gradient(180deg,var(--green),#14A862);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;letter-spacing:-0.3px;color:#06140D;}
-  .brand-name{font-weight:600;font-size:15px;}
-  .topbar-right{display:flex;align-items:center;gap:14px;font-size:13px;color:var(--text-dim);}
-  .btn{background:var(--panel-2);border:1px solid var(--border);color:var(--text);padding:9px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:border-color .15s,background .15s;}
-  .btn:hover{border-color:#34404F;background:#1A222C;}
-  .btn-primary{background:var(--green);color:#06140D;border-color:var(--green);}
-  .btn-primary:hover{background:#28DB87;border-color:#28DB87;}
+  button,input,select,textarea{font:inherit;color:inherit;}
+  button:not(:disabled){cursor:pointer;}
+  .app{max-width:1100px;margin:0 auto;padding:20px 18px 80px;}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0 16px;margin-bottom:22px;border-bottom:1px solid var(--border);}
+  .brand{display:flex;align-items:center;gap:10px;min-width:0;}
+  .brand-mark{width:32px;height:32px;border:1px solid var(--green);color:var(--green);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',Georgia,serif;font-size:13px;flex-shrink:0;background:transparent;}
+  .brand-name{font-family:'Fraunces',Georgia,serif;font-weight:500;font-size:16px;}
+  .topbar-right{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-dim);}
+  .kicker{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-faint);}
+  .btn{background:var(--panel-2);border:1px solid var(--border);color:var(--text);padding:10px 16px;border-radius:4px;font-size:13px;font-weight:500;min-height:44px;}
+  .btn:hover{background:#ddd4c0;}
+  .btn-primary{background:var(--green);color:#f4efe4;border-color:var(--green);}
+  .btn-primary:hover{background:#185536;}
   .btn-ghost{background:transparent;border-color:transparent;color:var(--text-dim);}
-  .btn-ghost:hover{color:var(--text);background:var(--panel-2);}
-  .btn-sm{padding:6px 12px;font-size:12px;}
-  .btn-danger{color:var(--red);border-color:#3A2222;}
-  .btn-amber{background:var(--amber);color:#1A0E00;border-color:var(--amber);}
-  .btn-amber:hover{background:#F7B84A;}
-  input,select,textarea{background:var(--panel-2);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:8px;font-size:14px;font-family:'Inter',sans-serif;width:100%;outline:none;}
-  input:focus,select:focus,textarea:focus{border-color:var(--accent);}
+  .btn-ghost:hover{color:var(--text);background:var(--panel);}
+  .btn-sm{padding:8px 12px;font-size:12px;min-height:40px;}
+  .btn-danger{color:var(--red);border-color:transparent;background:transparent;}
+  .btn-amber{background:var(--amber);color:#f4efe4;border-color:var(--amber);}
+  input,select,textarea{background:var(--panel);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:4px;font-size:16px;width:100%;outline:none;min-height:44px;}
+  textarea{min-height:88px;resize:vertical;}
+  input:focus,select:focus,textarea:focus{border-color:var(--green);}
   label{font-size:12px;color:var(--text-dim);display:block;margin-bottom:6px;font-weight:500;}
   .field{margin-bottom:14px;}
   .row{display:flex;gap:10px;}
-  .row>*{flex:1;}
+  .row>*{flex:1;min-width:0;}
   .badge-30{font-size:11px;color:var(--text-faint);margin-left:6px;}
-  /* Login */
-  .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
-  .login-card{width:100%;max-width:380px;background:var(--panel);border:1px solid var(--border-soft);border-radius:14px;padding:32px 28px;}
-  .login-header{text-align:center;margin-bottom:28px;}
-  .login-header .brand-mark{margin:0 auto 14px;width:42px;height:42px;border-radius:10px;font-size:15px;}
-  .login-header h1{font-size:18px;font-weight:600;margin-bottom:4px;}
-  .login-header p{font-size:13px;color:var(--text-dim);}
-  .role-toggle{display:flex;gap:8px;margin-bottom:22px;background:var(--panel-2);padding:4px;border-radius:9px;border:1px solid var(--border);}
-  .role-toggle button{flex:1;padding:8px;border-radius:6px;border:none;background:transparent;color:var(--text-dim);font-size:13px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;}
-  .role-toggle button.active{background:var(--bg);color:var(--text);border:1px solid var(--border);}
-  .login-error{color:var(--red);font-size:12px;margin-top:10px;text-align:center;}
-  .login-note{font-size:11px;color:var(--text-faint);text-align:center;margin-top:18px;line-height:1.5;}
-  /* Layout */
-  .layout{display:grid;grid-template-columns:265px 1fr;gap:20px;align-items:start;}
-  @media(max-width:760px){.layout{grid-template-columns:1fr;}}
-  .sidebar{background:var(--panel);border:1px solid var(--border-soft);border-radius:12px;padding:14px;position:sticky;top:20px;}
+  .login-wrap{min-height:100dvh;display:flex;flex-direction:column;}
+  .login-brandbar{display:flex;align-items:center;gap:10px;padding:12px 20px;border-bottom:1px solid var(--border);flex-shrink:0;}
+  .login-card{width:100%;max-width:400px;margin:0 auto;padding:28px 20px 40px;flex:1;}
+  .login-header{margin-bottom:22px;}
+  .login-header h1{font-family:'Fraunces',Georgia,serif;font-size:28px;font-weight:500;margin-bottom:4px;}
+  .login-header p{font-size:14px;color:var(--text-dim);}
+  .role-toggle{display:flex;gap:20px;margin-bottom:22px;border-bottom:1px solid var(--border);}
+  .role-toggle button{flex:0;padding:10px 0;border:none;background:transparent;color:var(--text-dim);font-size:14px;font-weight:500;border-bottom:2px solid transparent;border-radius:0;min-height:44px;}
+  .role-toggle button.active{color:var(--text);border-bottom-color:var(--green);}
+  .login-error{color:var(--red);font-size:12px;margin-top:10px;}
+  .login-note{font-size:11px;color:var(--text-faint);margin-top:18px;}
+  @media(min-width:900px){
+    .login-wrap{display:grid;grid-template-columns:1fr 1fr;align-items:stretch;}
+    .login-brandbar{flex-direction:column;align-items:flex-start;justify-content:space-between;padding:56px;border-bottom:0;border-right:1px solid var(--border);}
+    .login-brandbar .desk-copy{display:block;}
+    .login-card{display:flex;flex-direction:column;justify-content:center;padding:56px;}
+  }
+  .desk-copy{display:none;}
+  .desk-copy .big{font-family:'Fraunces',Georgia,serif;font-size:96px;line-height:1;font-weight:500;margin-top:24px;}
+  .desk-copy .sub{font-family:'Fraunces',Georgia,serif;font-size:48px;color:var(--green);}
+  .layout{display:grid;grid-template-columns:1fr;gap:20px;align-items:start;}
+  .sidebar{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;}
   .sidebar-title{font-size:11px;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-faint);padding:6px 8px 10px;font-weight:600;}
-  .client-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px;border-radius:8px;cursor:pointer;margin-bottom:2px;border:1px solid transparent;}
-  .client-item:hover{background:var(--panel-2);}
-  .client-item.active{background:var(--panel-2);border-color:var(--border);}
+  .client-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 10px;cursor:pointer;border-left:2px solid transparent;min-height:56px;}
+  .client-item:hover{background:var(--panel);}
+  .client-item.active{background:var(--panel);border-left-color:var(--green);}
   .client-item.inactive-client{opacity:0.5;}
-  .client-item .nm{font-size:13.5px;font-weight:500;}
-  .client-item .bal{font-size:11.5px;color:var(--text-dim);}
-  .badge{display:inline-block;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600;margin-left:4px;}
+  .client-item .nm{font-size:15px;font-weight:500;font-family:'Fraunces',Georgia,serif;}
+  .client-item .bal{font-size:12px;color:var(--text-dim);}
+  .badge{display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:600;margin-left:4px;}
   .badge-inactive{background:var(--red-dim);color:var(--red);}
   .badge-req{background:var(--amber-dim);color:var(--amber);}
-  .panel{background:var(--panel);border:1px solid var(--border-soft);border-radius:12px;padding:22px;}
-  .panel+.panel{margin-top:18px;}
-  .panel-title{font-size:13px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;}
-  .panel-title .sub{font-size:11px;color:var(--text-faint);font-weight:400;}
-  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:18px;}
-  .stat-card{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
-  .stat-label{font-size:11px;color:var(--text-dim);margin-bottom:6px;font-weight:500;}
-  .stat-value{font-size:21px;font-weight:600;}
+  .panel{border-top:1px solid var(--border);padding:28px 0;}
+  .panel:first-child{border-top:none;padding-top:0;}
+  .panel-title{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-faint);font-weight:500;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;}
+  .panel-title .sub{font-size:11px;color:var(--text-faint);font-weight:400;letter-spacing:0;text-transform:none;}
+  .stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 24px;margin-bottom:8px;}
+  @media(min-width:700px){.stat-grid{grid-template-columns:repeat(auto-fit,minmax(160px,1fr));}}
+  .stat-card{min-width:0;}
+  .stat-label{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-faint);margin-bottom:6px;}
+  .stat-value{font-size:22px;font-weight:500;font-family:'Fraunces',Georgia,serif;overflow-wrap:anywhere;}
   .stat-value.green{color:var(--green);}
+  .hero-bal{font-size:clamp(36px,8vw,60px);line-height:1;font-weight:500;font-family:'Fraunces',Georgia,serif;margin:4px 0 10px;}
+  .stmt-line{height:140px;width:100%;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:22px 0;}
+  .stmt-line svg{width:100%;height:100%;display:block;}
   table{width:100%;border-collapse:collapse;font-size:13px;}
-  th{text-align:left;color:var(--text-faint);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:0.4px;padding:8px 10px;border-bottom:1px solid var(--border-soft);}
-  td{padding:11px 10px;border-bottom:1px solid var(--border-soft);}
+  th{text-align:left;color:var(--text-faint);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:0.4px;padding:8px 8px 8px 0;border-bottom:1px solid var(--border);}
+  td{padding:12px 8px 12px 0;border-bottom:1px solid var(--border);vertical-align:top;}
   tr:last-child td{border-bottom:none;}
-  .pill{display:inline-block;padding:3px 9px;border-radius:20px;font-size:12px;font-weight:600;}
-  .pill.up{background:var(--green-dim);color:var(--green);}
-  .pill.down{background:var(--red-dim);color:var(--red);}
+  .pill{display:inline-block;padding:3px 8px;border-radius:3px;font-size:12px;font-weight:600;}
+  .pill.up,.pill.approved{background:var(--green-dim);color:var(--green);}
+  .pill.down,.pill.rejected{background:var(--red-dim);color:var(--red);}
   .pill.pending{background:var(--amber-dim);color:var(--amber);}
-  .pill.approved{background:var(--green-dim);color:var(--green);}
-  .pill.rejected{background:var(--red-dim);color:var(--red);}
   .empty{text-align:center;padding:36px 20px;color:var(--text-faint);font-size:13px;}
-  /* Modals */
-  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px;}
-  .modal{background:var(--panel);border:1px solid var(--border-soft);border-radius:14px;padding:26px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto;}
-  .modal h3{font-size:15px;font-weight:600;margin-bottom:18px;}
+  .modal-bg{position:fixed;inset:0;background:rgba(28,25,20,.4);display:flex;align-items:flex-end;justify-content:center;z-index:50;padding:16px;}
+  @media(min-width:640px){.modal-bg{align-items:center;}}
+  .modal{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:24px;width:100%;max-width:420px;max-height:90dvh;overflow-y:auto;}
+  .modal h3{font-family:'Fraunces',Georgia,serif;font-size:22px;font-weight:500;margin-bottom:18px;}
   .modal-actions{display:flex;gap:10px;margin-top:6px;}
-  /* Chat */
-  .chat-box{display:flex;flex-direction:column;height:380px;}
-  .chat-msgs{flex:1;overflow-y:auto;padding-right:4px;display:flex;flex-direction:column;gap:10px;}
+  .chat-box{display:flex;flex-direction:column;height:320px;}
+  .chat-msgs{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;}
   .msg-row{display:flex;}
   .msg-row.mine{justify-content:flex-end;}
-  .msg{max-width:78%;padding:9px 13px;border-radius:12px;font-size:13.5px;line-height:1.45;}
-  .msg.mine{background:var(--green-dim);color:#CFFCE6;border-bottom-right-radius:3px;}
-  .msg.theirs{background:var(--panel-2);border:1px solid var(--border);border-bottom-left-radius:3px;}
+  .msg{max-width:78%;padding:9px 13px;border-radius:8px;font-size:14px;background:var(--panel-2);}
+  .msg.mine{background:var(--green-dim);}
+  .msg.theirs{background:var(--panel);}
   .msg-time{font-size:10px;color:var(--text-faint);margin-top:4px;}
   .chat-input-row{display:flex;gap:8px;margin-top:12px;}
-  .req-btns{display:flex;gap:8px;margin-bottom:14px;}
-  /* Ticket */
-  .ticket{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;max-width:280px;}
+  .req-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+  .ticket{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:12px 14px;max-width:280px;}
   .ticket-header{font-size:11px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:6px;}
-  .ticket-amount{font-size:18px;font-weight:700;font-family:'JetBrains Mono',monospace;margin-bottom:6px;}
+  .ticket-amount{font-size:18px;font-family:'IBM Plex Mono',monospace;margin-bottom:6px;}
   .ticket-amount.deposit{color:var(--green);}
   .ticket-amount.withdrawal{color:var(--amber);}
   .ticket-actions{display:flex;gap:6px;margin-top:10px;}
-  .txn-dep td{background:rgba(31,209,124,.03);}
-  .txn-wd td{background:rgba(255,107,107,.03);}
+  .ledger-cards{display:none;}
+  .menu-btn{display:inline-flex;}
+  .sheet{display:none;}
+  .sheet.open{display:block;position:fixed;inset:0;z-index:40;background:rgba(28,25,20,.4);}
+  .sheet-panel{width:min(320px,90vw);height:100%;background:var(--bg);padding:16px;overflow:auto;}
+  @media(max-width:759px){
+    .hide-sm{display:none !important;}
+    .ledger-cards{display:block;}
+    .ledger-cards li{padding:12px 0;border-bottom:1px solid var(--border);}
+    .row{flex-direction:column;}
+  }
+  @media(min-width:760px){
+    .menu-btn{display:none;}
+    .sheet{display:none !important;}
+  }
+  @media(min-width:960px){
+    .layout{grid-template-columns:17rem 1fr;gap:32px;}
+    .sidebar{position:sticky;top:16px;border-right:1px solid var(--border);border-left:0;border-top:0;border-bottom:0;border-radius:0;padding-right:16px;}
+  }
+  @media(max-width:959px){
+    .desk-sidebar{display:none;}
+  }
 </style>
 </head>
 <body>
@@ -118,7 +152,6 @@
 <script>
 const SUPABASE_URL='https://sdqxwbyekidctoumosgk.supabase.co';
 const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNkcXh3Ynlla2lkY3RvdW1vc2drIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MTYzOTIsImV4cCI6MjA5ODM5MjM5Mn0.OwO8v7GsO2qj7OIP10MU07B-2caT610zYfASCfJGp8Y';
-
 async function sGet(key){
   try{
     const res=await fetch(`${SUPABASE_URL}/rest/v1/portal_data?key=eq.${encodeURIComponent(key)}&select=value`,
@@ -138,42 +171,34 @@ async function sSet(key,value){
   }catch(e){console.error('storage set failed',e);return false;}
 }
 function uid(){return Math.random().toString(36).slice(2,10)+Date.now().toString(36);}
-
 let state={
   view:'login',loginRole:'admin',loginError:'',
   adminConfigured:null,clients:[],currentClientId:null,loggedClient:null,
-  records:{},chats:{},transactions:{},modal:null
+  records:{},chats:{},transactions:{},modal:null,listOpen:false
 };
 function render(){window.__render();}
-
 async function loadAdminConfig(){state.adminConfigured=await sGet('admin-config');}
 async function loadClients(){state.clients=(await sGet('clients'))||[];}
 async function loadRecords(id){state.records[id]=(await sGet('records:'+id))||[];}
 async function loadChat(id){state.chats[id]=(await sGet('chat:'+id))||[];}
 async function loadTransactions(id){state.transactions[id]=(await sGet('transactions:'+id))||[];}
-
 function computeLedger(client){
   const cPct=(client.clientProfitPct!=null)?client.clientProfitPct:70;
   const own=client.ownerType||'shared';
   const aSplit=(client.splitAbuzarPct!=null)?client.splitAbuzarPct:50;
-
   const profitRecs=(state.records[client.id]||[])
     .map(r=>({...r,_ev:'profit'}))
     .sort((a,b)=>(a.dateFrom||a.date||'').localeCompare(b.dateFrom||b.date||'')||(a.addedAt||0)-(b.addedAt||0));
-
   const approvedTxns=(state.transactions[client.id]||[])
     .filter(t=>t.status==='approved')
     .map(t=>({...t,_ev:'txn'}));
-
   const all=[...profitRecs,...approvedTxns].sort((a,b)=>{
     const at=a._ev==='profit'?(a.addedAt||0):(a.processedAt||0);
     const bt=b._ev==='profit'?(b.addedAt||0):(b.processedAt||0);
     return at-bt;
   });
-
   let bal=client.initialDeposit,abPool=0,azPool=0,totalCProfit=0;
   const ledger=[];
-
   all.forEach(ev=>{
     if(ev._ev==='profit'){
       const before=bal,abBefore=abPool,azBefore=azPool,rate=ev.pct/100;
@@ -196,32 +221,74 @@ function computeLedger(client){
   });
   return{ledger,currentBalance:bal,totalCProfit,abPool,azPool,cPct,own,aSplit};
 }
-
-function fmtM(n){'use strict';return'$'+Number(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});}
+function fmtM(n){return'$'+Number(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});}
 function fmtP(n){return(n>=0?'+':'')+Number(n).toFixed(2)+'%';}
-function mName(m){return['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m-1];}
-function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
-
-/* ===== LOGIN ===== */
+function fmtS(d){if(!d)return'';const[y,m,day]=d.split('-');return parseInt(day,10)+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(m,10)-1]+' '+y;}
+function fmtFull(d){if(!d)return'';const[y,m,day]=d.split('-');return parseInt(day,10)+' '+['January','February','March','April','May','June','July','August','September','October','November','December'][parseInt(m,10)-1]+' '+y;}
+function esc(s){const d=document.createElement('div');d.textContent=s==null?'':s;return d.innerHTML;}
+function todayISO(){return new Date().toISOString().slice(0,10);}
+function chartSVG(client,calc){
+  const chrono=calc.ledger.filter(r=>r._ev==='profit');
+  const data=[{v:client.initialDeposit}].concat(chrono.map(r=>({v:r.after})));
+  if(data.length<2)return'';
+  const w=360,h=120,pad=8;
+  const vs=data.map(d=>d.v);
+  const min=Math.min.apply(null,vs),max=Math.max.apply(null,vs);
+  const span=max-min||1;
+  const pts=data.map((d,i)=>{
+    const x=pad+(i/(data.length-1))*(w-pad*2);
+    const y=pad+(1-(d.v-min)/span)*(h-pad*2);
+    return x+','+y;
+  }).join(' ');
+  return `<div class="stmt-line"><svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline fill="none" stroke="#1f6b45" stroke-width="1.75" points="${pts}"/></svg></div>`;
+}
+function clientListHTML(){
+  let sh=`<div class="sidebar-title">Clients (${state.clients.length})</div>`;
+  if(!state.clients.length){sh+=`<div class="empty" style="padding:20px 8px;">No clients yet.</div>`;}
+  else{
+    state.clients.forEach(c=>{
+      const calc=state.records[c.id]?computeLedger(c):null;
+      const bal=calc?calc.currentBalance:c.initialDeposit;
+      const inactive=calc&&calc.currentBalance<=0;
+      const ow=c.ownerType||'shared';
+      const owT=ow==='abuzar'?'Abuzar':ow==='azfar'?'Azfar':'Shared';
+      const pending=(state.transactions[c.id]||[]).filter(t=>t.status==='pending').length;
+      const profitEvs=calc?calc.ledger.filter(r=>r._ev==='profit'):[];
+      const lastPctStr=profitEvs.length?`<span class="mono" style="font-size:11px;font-weight:500;color:${profitEvs[profitEvs.length-1].pct>=0?'var(--green)':'var(--red)'}">${fmtP(profitEvs[profitEvs.length-1].pct)}</span>`:'';
+      sh+=`<div class="client-item ${state.currentClientId===c.id?'active':''} ${inactive?'inactive-client':''}" data-id="${c.id}">
+        <div style="flex:1;min-width:0;">
+          <div class="nm">${esc(c.name)}${inactive?'<span class="badge badge-inactive">Inactive</span>':''}${pending?`<span class="badge badge-req">${pending} req</span>`:''}</div>
+          <div class="bal mono">${fmtM(bal)} <span style="font-size:10px;color:var(--text-faint);">· ${owT}</span></div>
+        </div>${lastPctStr}</div>`;
+    });
+  }
+  sh+=`<button class="btn btn-primary btn-sm" id="acb" style="width:100%;margin-top:10px;">Add client</button>`;
+  return sh;
+}
 function ViewLogin(){
   const wrap=document.createElement('div');wrap.className='login-wrap';
-  wrap.innerHTML=`<div class="login-card">
-    <div class="login-header">
-      <div class="brand-mark">A2</div>
-      <h1>A2 Capital</h1>
-      <p>Track your account, week by week</p>
-    </div>
-    <div class="role-toggle">
-      <button data-role="admin" class="${state.loginRole==='admin'?'active':''}">Admin</button>
-      <button data-role="client" class="${state.loginRole==='client'?'active':''}">Client</button>
-    </div>
-    <div id="lf"></div>
-    <div class="login-error">${state.loginError||''}</div>
-    <div class="login-note">Your data is stored securely. Keep your passcode private.</div>
-  </div>`;
+  wrap.innerHTML=`
+    <aside class="login-brandbar">
+      <div class="brand"><div class="brand-mark">A2</div><div class="brand-name">A2 <span style="color:var(--green)">Capital</span></div></div>
+      <div class="desk-copy">
+        <p class="kicker">Private account</p>
+        <p class="big">A2</p>
+        <p class="sub">Capital</p>
+        <p style="color:var(--text-dim);max-width:280px;margin-top:20px;">Your balance, week by week.</p>
+      </div>
+    </aside>
+    <div class="login-card">
+      <div class="login-header"><h1>Sign in</h1><p>Admin desk or client account.</p></div>
+      <div class="role-toggle">
+        <button data-role="admin" class="${state.loginRole==='admin'?'active':''}">Admin</button>
+        <button data-role="client" class="${state.loginRole==='client'?'active':''}">Client</button>
+      </div>
+      <div id="lf"></div>
+      <div class="login-error">${state.loginError||''}</div>
+      <div class="login-note">Keep your passcode private.</div>
+    </div>`;
   wrap.querySelectorAll('[data-role]').forEach(b=>{b.onclick=()=>{state.loginRole=b.dataset.role;state.loginError='';render();};});
   const lf=wrap.querySelector('#lf');
-
   if(state.loginRole==='admin'){
     if(!state.adminConfigured){
       lf.innerHTML=`
@@ -269,43 +336,29 @@ function ViewLogin(){
   }
   return wrap;
 }
-
-/* ===== ADMIN ===== */
 function ViewAdmin(){
   const wrap=document.createElement('div');wrap.className='app';
   const top=document.createElement('div');top.className='topbar';
   top.innerHTML=`
-    <div class="brand"><div class="brand-mark">A2</div><div class="brand-name">A2 Capital \u2014 Admin</div></div>
-    <div class="topbar-right"><span>Admin</span><button class="btn btn-ghost btn-sm" id="lo">Log out</button></div>`;
-  top.querySelector('#lo').onclick=()=>{state.view='login';state.currentClientId=null;render();};
+    <div class="brand">
+      <button class="btn btn-ghost btn-sm menu-btn" id="menu" aria-label="Clients">☰</button>
+      <div class="brand-mark">A2</div>
+      <div><div class="brand-name">A2 Capital</div><div class="kicker">Admin</div></div>
+    </div>
+    <div class="topbar-right"><button class="btn btn-ghost btn-sm" id="lo">Log out</button></div>`;
+  top.querySelector('#lo').onclick=()=>{state.view='login';state.currentClientId=null;state.listOpen=false;render();};
+  top.querySelector('#menu').onclick=()=>{state.listOpen=true;render();};
   wrap.appendChild(top);
-
-  const layout=document.createElement('div');layout.className='layout';
-  const sidebar=document.createElement('div');sidebar.className='sidebar';
-
-  let sh=`<div class="sidebar-title">Clients (${state.clients.length})</div>`;
-  if(!state.clients.length){sh+=`<div class="empty" style="padding:20px 8px;">No clients yet.</div>`;}
-  else{
-    state.clients.forEach(c=>{
-      const calc=state.records[c.id]?computeLedger(c):null;
-      const bal=calc?calc.currentBalance:c.initialDeposit;
-      const inactive=calc&&calc.currentBalance<=0;
-      const ow=c.ownerType||'shared';
-      const owT=ow==='abuzar'?'Abuzar':ow==='azfar'?'Azfar':'Shared';
-      const pending=(state.transactions[c.id]||[]).filter(t=>t.status==='pending').length;
-      const profitEvs=calc?calc.ledger.filter(r=>r._ev==='profit'):[];
-      const lastPctStr=profitEvs.length?`<span style="font-size:11px;font-weight:600;color:${profitEvs[profitEvs.length-1].pct>=0?'var(--green)':'var(--red)'}">${fmtP(profitEvs[profitEvs.length-1].pct)}</span>`:'';
-      sh+=`<div class="client-item ${state.currentClientId===c.id?'active':''} ${inactive?'inactive-client':''}" data-id="${c.id}">
-        <div style="flex:1;min-width:0;">
-          <div class="nm">${esc(c.name)}${inactive?'<span class="badge badge-inactive">INACTIVE</span>':''}${pending?`<span class="badge badge-req">${pending} REQ</span>`:''}</div>
-          <div class="bal mono">${fmtM(bal)} <span style="font-size:10px;color:var(--text-faint);">\u00b7 ${owT}</span></div>
-        </div>${lastPctStr}</div>`;
-    });
+  if(state.listOpen){
+    const sheet=document.createElement('div');sheet.className='sheet open';
+    sheet.innerHTML=`<div class="sheet-panel" id="sheet-inner">${clientListHTML()}</div>`;
+    sheet.onclick=e=>{if(e.target===sheet){state.listOpen=false;render();}};
+    wrap.appendChild(sheet);
   }
-  sidebar.innerHTML=sh;
-  sidebar.innerHTML+=`<button class="btn btn-primary btn-sm" id="acb" style="width:100%;margin-top:10px;">+ Add client</button>`;
+  const layout=document.createElement('div');layout.className='layout';
+  const sidebar=document.createElement('div');sidebar.className='sidebar desk-sidebar';
+  sidebar.innerHTML=clientListHTML();
   layout.appendChild(sidebar);
-
   const main=document.createElement('div');
   const allC=state.clients.map(c=>state.records[c.id]?computeLedger(c):null);
   const totalAUM=state.clients.reduce((s,c,i)=>s+(allC[i]?allC[i].currentBalance:c.initialDeposit),0);
@@ -313,76 +366,79 @@ function ViewAdmin(){
   const totalAz=allC.reduce((s,c)=>s+(c?c.azPool:0),0);
   const totalCP=allC.reduce((s,c)=>s+(c?c.totalCProfit:0),0);
   const activeCount=state.clients.filter(c=>{const cl=state.records[c.id]?computeLedger(c):null;return!cl||cl.currentBalance>0;}).length;
-
   const ov=document.createElement('div');ov.className='panel';
-  ov.innerHTML=`<div class="panel-title">Overview</div><div class="stat-grid">
-    <div class="stat-card"><div class="stat-label">Assets under management</div><div class="stat-value mono">${fmtM(totalAUM)}</div></div>
-    <div class="stat-card"><div class="stat-label">Client profit distributed</div><div class="stat-value green mono">${fmtM(totalCP)}</div></div>
-    <div class="stat-card"><div class="stat-label">Abuzar's pool</div><div class="stat-value green mono">${fmtM(totalAb)}</div></div>
-    <div class="stat-card"><div class="stat-label">Azfar's pool</div><div class="stat-value green mono">${fmtM(totalAz)}</div></div>
-    <div class="stat-card"><div class="stat-label">Active clients</div><div class="stat-value">${activeCount}</div></div>
-  </div>`;
+  ov.innerHTML=`<p class="kicker">The book</p>
+    <p class="hero-bal">${fmtM(totalAUM)}</p>
+    <p style="color:var(--text-dim);margin-bottom:22px;">${activeCount} active · ${fmtM(totalCP)} to clients</p>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-label">Abuzar</div><div class="stat-value">${fmtM(totalAb)}</div></div>
+      <div class="stat-card"><div class="stat-label">Azfar</div><div class="stat-value">${fmtM(totalAz)}</div></div>
+      <div class="stat-card"><div class="stat-label">Clients</div><div class="stat-value">${state.clients.length}</div></div>
+    </div>`;
   main.appendChild(ov);
-
   if(state.currentClientId){
     const cl=state.clients.find(c=>c.id===state.currentClientId);
     if(cl)main.appendChild(ClientDetailPanel(cl,true));
   } else {
     const hint=document.createElement('div');hint.className='panel';
-    hint.innerHTML=`<div class="empty">Select a client from the left to view their account.</div>`;
+    hint.innerHTML=`<div class="empty">Select a client to view their account.<div style="margin-top:12px;"><button class="btn btn-primary menu-btn" id="open-list">Open clients</button></div></div>`;
     main.appendChild(hint);
   }
   layout.appendChild(main);
   wrap.appendChild(layout);
-
-  sidebar.querySelectorAll('.client-item').forEach(el=>{
-    el.onclick=async()=>{
-      const id=el.dataset.id;state.currentClientId=id;
-      await loadRecords(id);await loadChat(id);await loadTransactions(id);render();
-    };
-  });
-  sidebar.querySelector('#acb').onclick=()=>{state.modal='addClient';render();};
+  function bindList(root){
+    root.querySelectorAll('.client-item').forEach(el=>{
+      el.onclick=async()=>{
+        const id=el.dataset.id;state.currentClientId=id;state.listOpen=false;
+        await loadRecords(id);await loadChat(id);await loadTransactions(id);render();
+      };
+    });
+    const add=root.querySelector('#acb');
+    if(add) add.onclick=()=>{state.modal='addClient';state.listOpen=false;render();};
+  }
+  bindList(sidebar);
+  const sheetInner=wrap.querySelector('#sheet-inner');
+  if(sheetInner) bindList(sheetInner);
+  wrap.querySelector('#open-list')?.addEventListener('click',()=>{state.listOpen=true;render();});
   return wrap;
 }
-
-/* ===== CLIENT DETAIL PANEL ===== */
 function ClientDetailPanel(client,isAdmin){
   const calc=computeLedger(client);
   const host=document.createElement('div');
-
-  /* Stats */
-  const info=document.createElement('div');info.className='panel';
+  const last=calc.ledger.filter(r=>r._ev==='profit').slice().reverse()[0];
   const owL=calc.own==='abuzar'?'Abuzar only':calc.own==='azfar'?'Azfar only':'Shared';
   const spN=calc.own==='shared'?` (Abuzar ${calc.aSplit}% / Azfar ${100-calc.aSplit}% of cut)`:'';
+  const info=document.createElement('div');info.className='panel';
   info.innerHTML=`
     <div class="panel-title">
-      <span>${esc(client.name)} <span class="sub">${esc(client.email)} \u00b7 joined ${client.joinDate}</span></span>
+      <span>${isAdmin?'Account':'Private account'}</span>
       ${isAdmin?'<button class="btn btn-ghost btn-sm" id="ecb">Edit</button>':''}
     </div>
-    ${isAdmin?`<div style="font-size:12px;color:var(--text-faint);margin-bottom:14px;">Client keeps ${calc.cPct}% \u00b7 ${owL}${spN}</div>`:''}
+    <h2 class="display" style="font-size:28px;font-weight:500;margin-bottom:28px;">${esc(client.name)}</h2>
+    <p class="kicker">Current balance</p>
+    <p class="hero-bal">${fmtM(calc.currentBalance)}</p>
+    <p style="color:var(--text-dim);font-size:14px;">${last
+      ? `After ${fmtS(last.dateTo||last.dateFrom||'')}  ·  ${fmtP(last.pct)}  ·  ${last.cGain>=0?'+':''}${fmtM(last.cGain)} yours`
+      : `Opened ${esc(client.joinDate)}  ·  started at ${fmtM(client.initialDeposit)}`}</p>
+    ${isAdmin?`<div style="font-size:12px;color:var(--text-faint);margin-top:8px;">Keeps ${calc.cPct}% · ${owL}${spN}</div>`:''}
+    ${chartSVG(client,calc)}
     <div class="stat-grid">
-      <div class="stat-card"><div class="stat-label">Current balance</div><div class="stat-value mono">${fmtM(calc.currentBalance)}</div></div>
-      <div class="stat-card"><div class="stat-label">Initial deposit</div><div class="stat-value mono">${fmtM(client.initialDeposit)}</div></div>
-      <div class="stat-card"><div class="stat-label">Total profit earned</div><div class="stat-value green mono">${fmtM(calc.totalCProfit)}</div></div>
-      ${isAdmin&&calc.own!=='azfar'?`<div class="stat-card"><div class="stat-label">Abuzar's pool</div><div class="stat-value green mono">${fmtM(calc.abPool)}</div></div>`:''}
-      ${isAdmin&&calc.own!=='abuzar'?`<div class="stat-card"><div class="stat-label">Azfar's pool</div><div class="stat-value green mono">${fmtM(calc.azPool)}</div></div>`:''}
+      <div class="stat-card"><div class="stat-label">Started with</div><div class="stat-value">${fmtM(client.initialDeposit)}</div></div>
+      <div class="stat-card"><div class="stat-label">Profit to date</div><div class="stat-value green">${fmtM(calc.totalCProfit)}</div></div>
+      ${isAdmin&&calc.own!=='azfar'?`<div class="stat-card"><div class="stat-label">Abuzar</div><div class="stat-value">${fmtM(calc.abPool)}</div></div>`:''}
+      ${isAdmin&&calc.own!=='abuzar'?`<div class="stat-card"><div class="stat-label">Azfar</div><div class="stat-value">${fmtM(calc.azPool)}</div></div>`:''}
     </div>`;
   host.appendChild(info);
   if(isAdmin){info.querySelector('#ecb')?.addEventListener('click',()=>{state.modal='editClient';render();});}
-
-  /* Add weekly result (admin) */
   if(isAdmin){
     const ar=document.createElement('div');ar.className='panel';
-    const now=new Date();
     ar.innerHTML=`<div class="panel-title">Add result <span class="sub">gross %, before the ${calc.cPct}/${100-calc.cPct} split</span></div>
       <div class="row">
-        <div class="field"><label>From</label><input id="rd1" type="date" value="${now.toISOString().slice(0,10)}"><div id="rd1-lbl" style="font-size:11px;color:var(--green);margin-top:5px;"></div></div>
-        <div class="field"><label>To</label><input id="rd2" type="date" value="${now.toISOString().slice(0,10)}"><div id="rd2-lbl" style="font-size:11px;color:var(--green);margin-top:5px;"></div></div>
+        <div class="field"><label>From</label><input id="rd1" type="date" value="${todayISO()}"><div id="rd1-lbl" style="font-size:11px;color:var(--green);margin-top:5px;"></div></div>
+        <div class="field"><label>To</label><input id="rd2" type="date" value="${todayISO()}"><div id="rd2-lbl" style="font-size:11px;color:var(--green);margin-top:5px;"></div></div>
         <div class="field"><label>Gross %</label><input id="rp" type="number" step="0.01" placeholder="e.g. 4.5"></div>
       </div>
       <button class="btn btn-primary" id="srb">Save</button>`;
-    const fmtFull=d=>{if(!d)return'';const[y,m,day]=d.split('-');return`${parseInt(day)} ${['January','February','March','April','May','June','July','August','September','October','November','December'][parseInt(m)-1]} ${y}`;};
-    const fmtShort=d=>{if(!d)return'';const[y,m,day]=d.split('-');return`${parseInt(day)} ${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(m)-1]} ${y}`;};
     const upd=()=>{
       ar.querySelector('#rd1-lbl').textContent=fmtFull(ar.querySelector('#rd1').value);
       ar.querySelector('#rd2-lbl').textContent=fmtFull(ar.querySelector('#rd2').value);
@@ -390,24 +446,6 @@ function ClientDetailPanel(client,isAdmin){
     ar.querySelector('#rd1').addEventListener('change',upd);
     ar.querySelector('#rd2').addEventListener('change',upd);
     upd();
-    ar.querySelector('#srb').onclick=async()=>{
-      const dateFrom=ar.querySelector('#rd1').value;
-      const dateTo=ar.querySelector('#rd2').value;
-      const pct=parseFloat(ar.querySelector('#rp').value);
-      if(!dateFrom||!dateTo){alert('Pick both dates.');return;}
-      if(dateTo<dateFrom){alert('End date must be after start date.');return;}
-      if(isNaN(pct)){alert('Enter a valid percentage.');return;}
-      const existing=state.records[client.id]||[];
-      const dateKey=dateFrom+'_'+dateTo;
-      if(existing.find(r=>r.dateKey===dateKey)){
-        if(!confirm('A record for this range already exists. Replace it?'))return;
-      }
-      const filtered=existing.filter(r=>r.dateKey!==dateKey);
-      filtered.push({id:uid(),dateKey,dateFrom,dateTo,pct,addedAt:Date.now()});
-      state.records[client.id]=filtered;
-      await sSet('records:'+client.id,filtered);
-      render();
-    };
     ar.querySelector('#srb').onclick=async()=>{
       const dateFrom=ar.querySelector('#rd1').value;
       const dateTo=ar.querySelector('#rd2').value;
@@ -428,19 +466,24 @@ function ClientDetailPanel(client,isAdmin){
     };
     host.appendChild(ar);
   }
-
-  /* Weekly ledger */
   const lp=document.createElement('div');lp.className='panel';
-  const fmtS=d=>{if(!d)return'';const[y,m,day]=d.split('-');return`${parseInt(day)} ${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(m)-1]} ${y}`;};
   const pRows=calc.ledger.filter(r=>r._ev==='profit').slice().reverse();
+  let cards='';
   let rows='';
   if(!pRows.length){
     rows=`<tr><td colspan="${isAdmin?7:5}" class="empty">No results yet.</td></tr>`;
+    cards=`<p class="empty">No results yet.</p>`;
   } else {
     pRows.forEach(r=>{
       const df=r.dateFrom||r.date||'';
       const dt=r.dateTo||r.date||'';
-      const rangeLabel=!df?'—':df===dt?fmtS(df):`${fmtS(df)} \u2013 ${fmtS(dt)}`;
+      const rangeLabel=!df?'—':df===dt?fmtS(df):`${fmtS(df)} – ${fmtS(dt)}`;
+      cards+=`<li>
+        <div style="display:flex;justify-content:space-between;gap:8px;"><span style="font-size:12px;color:var(--text-dim);">${rangeLabel}</span><span class="pill ${r.pct>=0?'up':'down'}">${fmtP(r.pct)}</span></div>
+        <p class="display" style="font-size:20px;margin-top:8px;">${fmtM(r.after)}</p>
+        <p style="color:var(--green);font-size:12px;margin-top:4px;">+${fmtM(r.cGain)} profit</p>
+        ${isAdmin?`<button class="btn btn-danger btn-sm" data-delid="${r.id}">Remove</button>`:''}
+      </li>`;
       rows+=`<tr>
         <td style="font-size:12px;">${rangeLabel}</td>
         <td><span class="pill ${r.pct>=0?'up':'down'}">${fmtP(r.pct)}</span></td>
@@ -449,12 +492,13 @@ function ClientDetailPanel(client,isAdmin){
         <td class="mono">${fmtM(r.after)}</td>
         ${isAdmin&&calc.own!=='azfar'?`<td class="mono">${fmtM(r.abAfter)}</td>`:''}
         ${isAdmin&&calc.own!=='abuzar'?`<td class="mono">${fmtM(r.azAfter)}</td>`:''}
-        ${isAdmin?`<td><button class="btn btn-ghost btn-sm" style="color:var(--red);padding:4px 8px;" data-delid="${r.id}">\u00d7</button></td>`:''}
+        ${isAdmin?`<td><button class="btn btn-ghost btn-sm" style="color:var(--red);padding:4px 8px;" data-delid="${r.id}">×</button></td>`:''}
       </tr>`;
     });
   }
-  lp.innerHTML=`<div class="panel-title">Ledger</div>
-    <table><thead><tr><th>Period</th><th>Gross return</th><th>Balance before</th><th>Your profit (${calc.cPct}%)</th><th>Balance after</th>${isAdmin&&calc.own!=='azfar'?'<th>Abuzar pool</th>':''}${isAdmin&&calc.own!=='abuzar'?'<th>Azfar pool</th>':''}${isAdmin?'<th></th>':''}</tr></thead>
+  lp.innerHTML=`<div class="panel-title">Statement</div>
+    <ul class="ledger-cards">${cards}</ul>
+    <table class="hide-sm"><thead><tr><th>Period</th><th>Gross</th><th>Before</th><th>Profit (${calc.cPct}%)</th><th>After</th>${isAdmin&&calc.own!=='azfar'?'<th>Abuzar</th>':''}${isAdmin&&calc.own!=='abuzar'?'<th>Azfar</th>':''}${isAdmin?'<th></th>':''}</tr></thead>
     <tbody>${rows}</tbody></table>`;
   if(isAdmin){
     lp.querySelectorAll('[data-delid]').forEach(btn=>{
@@ -468,8 +512,6 @@ function ClientDetailPanel(client,isAdmin){
     });
   }
   host.appendChild(lp);
-
-  /* Monthly summary */
   const profitEvs=calc.ledger.filter(r=>r._ev==='profit');
   if(profitEvs.length){
     const monthMap={};
@@ -487,10 +529,9 @@ function ClientDetailPanel(client,isAdmin){
     let mrows='';
     Object.keys(monthMap).sort().reverse().forEach(k=>{
       const[y,m]=k.split('-');
-      const label=`${months[parseInt(m)-1]} ${y}`;
       const d=monthMap[k];
       mrows+=`<tr>
-        <td style="font-weight:500;">${label}</td>
+        <td style="font-weight:500;">${months[parseInt(m,10)-1]} ${y}</td>
         <td class="mono" style="color:var(--green)">+${fmtM(d.clientGain)}</td>
         <td style="font-size:12px;color:var(--text-dim);">${d.count} entr${d.count===1?'y':'ies'}</td>
       </tr>`;
@@ -500,16 +541,14 @@ function ClientDetailPanel(client,isAdmin){
       <tbody>${mrows}</tbody></table>`;
     host.appendChild(mp);
   }
-
-  /* Transaction history */
   const txns=state.transactions[client.id]||[];
   if(txns.length){
     const tp=document.createElement('div');tp.className='panel';
     let tr2='';
     txns.slice().sort((a,b)=>b.requestedAt-a.requestedAt).forEach(t=>{
-      tr2+=`<tr class="${t.type==='deposit'?'txn-dep':'txn-wd'}">
+      tr2+=`<tr>
         <td style="text-transform:capitalize;font-weight:500;">${t.type}</td>
-        <td class="mono" style="color:${t.type==='deposit'?'var(--green)':'var(--amber)'}">${t.type==='deposit'?'+':'\u2212'}${fmtM(t.amount)}</td>
+        <td class="mono" style="color:${t.type==='deposit'?'var(--green)':'var(--amber)'}">${t.type==='deposit'?'+':'−'}${fmtM(t.amount)}</td>
         <td><span class="pill ${t.status}">${t.status}</span></td>
         <td style="font-size:12px;color:var(--text-faint);">${new Date(t.requestedAt).toLocaleDateString()}</td>
         ${t.note?`<td style="font-size:12px;color:var(--text-dim);">${esc(t.note)}</td>`:'<td></td>'}
@@ -520,24 +559,19 @@ function ClientDetailPanel(client,isAdmin){
       <tbody>${tr2}</tbody></table>`;
     host.appendChild(tp);
   }
-
-  /* Chat */
   const cp=document.createElement('div');cp.className='panel';
   cp.innerHTML=`<div class="panel-title">Messages ${isAdmin?'with '+esc(client.name):'with your advisor'}</div>`;
-
   if(!isAdmin){
     const rb=document.createElement('div');rb.className='req-btns';
-    rb.innerHTML=`<button class="btn btn-primary btn-sm" id="drb" style="flex:1">+ Request Deposit</button>
-                  <button class="btn btn-amber btn-sm" id="wrb" style="flex:1">\u2212 Request Withdrawal</button>`;
+    rb.innerHTML=`<button class="btn btn-primary" id="drb">Deposit</button>
+                  <button class="btn btn-amber" id="wrb">Withdraw</button>`;
     cp.appendChild(rb);
     rb.querySelector('#drb').onclick=()=>{state.modal={type:'reqTxn',txnType:'deposit',clientId:client.id};render();};
     rb.querySelector('#wrb').onclick=()=>{state.modal={type:'reqTxn',txnType:'withdrawal',clientId:client.id};render();};
   }
-
   const chatBox=document.createElement('div');chatBox.className='chat-box';
   const msgsHost=document.createElement('div');msgsHost.className='chat-msgs';
   const msgs=state.chats[client.id]||[];
-
   if(!msgs.length){msgsHost.innerHTML=`<div class="empty">No messages yet.</div>`;}
   else{
     msgs.forEach(m=>{
@@ -548,11 +582,11 @@ function ClientDetailPanel(client,isAdmin){
         const status=txn?txn.status:'pending';
         const tc=document.createElement('div');
         tc.innerHTML=`<div class="ticket">
-          <div class="ticket-header">${m.ticketTxnType==='deposit'?'\uD83D\uDCE5 Deposit Request':'\uD83D\uDCE4 Withdrawal Request'}</div>
+          <div class="ticket-header">${m.ticketTxnType==='deposit'?'Deposit request':'Withdrawal request'}</div>
           <div class="ticket-amount ${m.ticketTxnType}">${fmtM(m.ticketAmount)}</div>
           ${m.ticketNote?`<div style="font-size:12px;color:var(--text-dim);margin-bottom:6px;">${esc(m.ticketNote)}</div>`:''}
           <div style="font-size:10px;color:var(--text-faint);margin-bottom:6px;">${new Date(m.ts).toLocaleString()}</div>
-          <span class="pill ${status}">${status.toUpperCase()}</span>
+          <span class="pill ${status}">${status}</span>
           ${isAdmin&&status==='pending'?`<div class="ticket-actions">
             <button class="btn btn-primary btn-sm" data-tid="${m.ticketId}" data-action="approve">Approve</button>
             <button class="btn btn-danger btn-sm" data-tid="${m.ticketId}" data-action="reject">Reject</button>
@@ -561,13 +595,13 @@ function ClientDetailPanel(client,isAdmin){
         tc.querySelectorAll('[data-action]').forEach(btn=>{
           btn.onclick=async()=>{
             const tid=btn.dataset.tid,action=btn.dataset.action;
-            const txns=state.transactions[client.id]||[];
-            const t=txns.find(t=>t.id===tid);
+            const list=state.transactions[client.id]||[];
+            const t=list.find(t=>t.id===tid);
             if(!t)return;
             t.status=action==='approve'?'approved':'rejected';
             t.processedAt=Date.now();
-            state.transactions[client.id]=txns;
-            await sSet('transactions:'+client.id,txns);
+            state.transactions[client.id]=list;
+            await sSet('transactions:'+client.id,list);
             render();
           };
         });
@@ -580,7 +614,6 @@ function ClientDetailPanel(client,isAdmin){
       msgsHost.appendChild(row);
     });
   }
-
   chatBox.appendChild(msgsHost);
   const ir=document.createElement('div');ir.className='chat-input-row';
   ir.innerHTML=`<input id="ci" placeholder="Type a message"><button class="btn btn-primary" id="cs">Send</button>`;
@@ -588,7 +621,6 @@ function ClientDetailPanel(client,isAdmin){
   cp.appendChild(chatBox);
   host.appendChild(cp);
   setTimeout(()=>{msgsHost.scrollTop=msgsHost.scrollHeight;},0);
-
   const send=async()=>{
     const inp=ir.querySelector('#ci');
     const text=inp.value.trim();if(!text)return;
@@ -602,30 +634,25 @@ function ClientDetailPanel(client,isAdmin){
   ir.querySelector('#ci').addEventListener('keydown',e=>{if(e.key==='Enter')send();});
   return host;
 }
-
-/* ===== CLIENT VIEW ===== */
 function ViewClient(){
   const wrap=document.createElement('div');wrap.className='app';
   const client=state.loggedClient;
   const top=document.createElement('div');top.className='topbar';
   top.innerHTML=`<div class="brand"><div class="brand-mark">A2</div><div class="brand-name">A2 Capital</div></div>
-    <div class="topbar-right"><span>${esc(client.email)}</span><button class="btn btn-ghost btn-sm" id="lo">Log out</button></div>`;
+    <div class="topbar-right"><button class="btn btn-ghost btn-sm" id="lo">Log out</button></div>`;
   top.querySelector('#lo').onclick=()=>{state.view='login';state.loggedClient=null;render();};
   wrap.appendChild(top);
   wrap.appendChild(ClientDetailPanel(client,false));
   return wrap;
 }
-
-/* ===== MODALS ===== */
 function renderModal(){
   if(!state.modal)return null;
   const bg=document.createElement('div');bg.className='modal-bg';
   bg.onclick=e=>{if(e.target===bg){state.modal=null;render();}};
   const modal=document.createElement('div');modal.className='modal';
-
   if(state.modal&&state.modal.type==='reqTxn'){
     const{txnType,clientId}=state.modal;
-    modal.innerHTML=`<h3>${txnType==='deposit'?'Request a Deposit':'Request a Withdrawal'}</h3>
+    modal.innerHTML=`<h3>${txnType==='deposit'?'Request a deposit':'Request a withdrawal'}</h3>
       <div class="field"><label>Amount (USD)</label><input id="ma" type="number" step="0.01" min="0" placeholder="0.00"></div>
       <div class="field"><label>Note (optional)</label><textarea id="mn" rows="2" placeholder="Any note for your advisor"></textarea></div>
       <div class="modal-actions">
@@ -648,14 +675,13 @@ function renderModal(){
       state.modal=null;render();
     };
   }
-
   else if(state.modal==='addClient'){
     modal.innerHTML=`<h3>Add a new client</h3>
       <div class="field"><label>Full name</label><input id="mn" placeholder="Client name"></div>
       <div class="field"><label>Email</label><input id="me" type="email" placeholder="name@email.com"></div>
       <div class="field"><label>Phone</label><input id="mph" placeholder="03xx-xxxxxxx"></div>
       <div class="row">
-        <div class="field"><label>Join date</label><input id="mj" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
+        <div class="field"><label>Join date</label><input id="mj" type="date" value="${todayISO()}"></div>
         <div class="field"><label>Initial deposit (USD)</label><input id="md" type="number" step="0.01" placeholder="1000"></div>
       </div>
       <div class="field"><label>Client passcode <span class="badge-30">share with them</span></label><input id="mp" placeholder="Set a passcode"></div>
@@ -692,7 +718,6 @@ function renderModal(){
       render();
     };
   }
-
   else if(state.modal==='editClient'){
     const cl=state.clients.find(c=>c.id===state.currentClientId);
     const cp=cl.clientProfitPct??70,co=cl.ownerType||'shared',cs=cl.splitAbuzarPct??50;
@@ -732,12 +757,9 @@ function renderModal(){
       state.modal=null;state.currentClientId=null;render();
     };
   }
-
   modal.querySelector('#m-cancel')?.addEventListener('click',()=>{state.modal=null;render();});
   bg.appendChild(modal);return bg;
 }
-
-/* ===== MAIN RENDER ===== */
 window.__render=function(){
   const root=document.getElementById('root');root.innerHTML='';
   let view;
